@@ -1,0 +1,20 @@
+{
+  "name": "hyperion-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Leandro2585/hyperion-api",
+  "author": "Leandro2585 <leo.real2585@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf build && tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "dependencies": {
+    "rimraf": "^3.0.2"
+  }
+}
