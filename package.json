@@ -1,20 +1,43 @@
 {
   "name": "hyperion-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "repository": "https://github.com/Leandro2585/hyperion-api",
   "author": "Leandro2585 <leo.real2585@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf build && tsc"
+    "start": "node build/main/index.ts",
+    "build": "rimraf build && tsc -p tsconfig-build.json",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint -- --fix",
+    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test:watch": "yarn test --watch",
+    "test:staged": "yarn test --findRelatedTests",
+    "test:coverage": "yarn test --coverage",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^16.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "husky": "^7.0.1",
+    "jest": "^27.0.6",
+    "lint-staged": "^11.1.2",
+    "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   },
   "engines": {
     "node": "12.x"
   },
   "dependencies": {
+    "module-alias": "^2.2.2",
     "rimraf": "^3.0.2"
   }
 }
