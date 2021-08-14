@@ -6,54 +6,51 @@ import { CreateFacebookAccountRepository, LoadUserAccountRepository } from '@dat
 
 describe('facebook-authentication usecase', () => {
   let sut: FacebookAuthenticationService
-  let loadFacebookUserApi: MockProxy<LoadFacebookUserApi>
-  let loadUserAccountRepository: MockProxy<LoadUserAccountRepository>
-  let createFacebookAccountRepository: MockProxy<CreateFacebookAccountRepository>
+  let facebookApi: MockProxy<LoadFacebookUserApi>
+  let userAccountRepository: MockProxy<LoadUserAccountRepository & CreateFacebookAccountRepository>
 
   const token = 'any_token'
 
   beforeEach(() => {
-    loadFacebookUserApi = mock()
-    loadUserAccountRepository = mock()
-    createFacebookAccountRepository = mock()
-    loadFacebookUserApi.loadUser.mockResolvedValue({
+    facebookApi = mock()
+    facebookApi.loadUser.mockResolvedValue({
       name: 'any_fb_name',
       email: 'any_fb_email',
       facebookId: 'any_fb_id'
     })
+    userAccountRepository = mock()
     sut = new FacebookAuthenticationService(
-      loadFacebookUserApi,
-      loadUserAccountRepository,
-      createFacebookAccountRepository
+      facebookApi,
+      userAccountRepository
     )
   })
 
   test('should call LoadFacebookUserApi with correct params', async () => {
     await sut.execute({ token: 'any_token' })
-    expect(loadFacebookUserApi.loadUser).toHaveBeenCalledWith({ token })
-    expect(loadFacebookUserApi.loadUser).toHaveBeenCalledTimes(1)
+    expect(facebookApi.loadUser).toHaveBeenCalledWith({ token })
+    expect(facebookApi.loadUser).toHaveBeenCalledTimes(1)
   })
 
   test('should return AuthenticationError when LoadFacebookUserApi returns undefined', async () => {
-    loadFacebookUserApi.loadUser.mockResolvedValueOnce(undefined)
+    facebookApi.loadUser.mockResolvedValueOnce(undefined)
     const authResult = await sut.execute({ token })
     expect(authResult).toEqual(new AuthenticationError())
   })
 
   test('should call LoadUserAccountRepository when LoadFacebookUserApi returns data', async () => {
     await sut.execute({ token })
-    expect(loadUserAccountRepository.load).toHaveBeenCalledWith({ email: 'any_fb_email' })
-    expect(loadUserAccountRepository.load).toHaveBeenCalledTimes(1)
+    expect(userAccountRepository.load).toHaveBeenCalledWith({ email: 'any_fb_email' })
+    expect(userAccountRepository.load).toHaveBeenCalledTimes(1)
   })
 
   test('should call CreateUserAccountRepository when LoadUserAccountRepository returns undefined', async () => {
-    loadUserAccountRepository.load.mockResolvedValueOnce(undefined)
+    userAccountRepository.load.mockResolvedValueOnce(undefined)
     await sut.execute({ token })
-    expect(createFacebookAccountRepository.createFromFacebook).toHaveBeenCalledWith({
+    expect(userAccountRepository.createFromFacebook).toHaveBeenCalledWith({
       facebookId: 'any_fb_id',
       name: 'any_fb_name',
       email: 'any_fb_email'
     })
-    expect(createFacebookAccountRepository.createFromFacebook).toHaveBeenCalledTimes(1)
+    expect(userAccountRepository.createFromFacebook).toHaveBeenCalledTimes(1)
   })
 })
