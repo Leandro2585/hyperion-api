@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "build",
-    "rootDir": "src",
+    "rootDirs": ["src", "tests"],
     "target": "ES2020",
     "sourceMap": true,
     "skipLibCheck": true,
