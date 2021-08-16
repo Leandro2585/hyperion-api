@@ -7,8 +7,7 @@ module.exports = {
     '@domain/(.+)': '<rootDir>/src/domain/$1',
     '@data/(.+)': '<rootDir>/src/data/$1',
     '@infra/(.+)': '<rootDir>/src/infra/$1',
-    '@application/(.+)': '<rootDir>/src/application/$1',
-    '@validation/(.+)': '<rootDir>/src/validation/$1'
+    '@app/(.+)': '<rootDir>/src/app/$1'
   },
   roots: [
     '<rootDir>/src',
