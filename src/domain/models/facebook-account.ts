@@ -1,21 +1,21 @@
 type FacebookData = {
-  name: string;
-  email: string;
-  facebookId: string;
+  name: string
+  email: string
+  facebookId: string
 }
 
 type AccountData = {
-  id?: string;
-  name?: string;
+  id?: string
+  name?: string
 }
 
 export class FacebookAccount {
-  id?: string;
-  name: string;
-  email: string;
-  facebookId: string;
+  id?: string
+  name: string
+  email: string
+  facebookId: string
 
-  constructor(facebookData: FacebookData, accountData?: AccountData) {
+  constructor (facebookData: FacebookData, accountData?: AccountData) {
     this.id = accountData?.id
     this.name = accountData?.name ?? facebookData.name
     this.email = facebookData.email
