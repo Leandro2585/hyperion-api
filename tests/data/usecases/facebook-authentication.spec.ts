@@ -15,10 +15,10 @@ describe('facebook-authentication usecase', () => {
   let crypto: MockProxy<TokenGenerator>
   let facebookApi: MockProxy<LoadFacebookUserApi>
   let userAccountRepository: MockProxy<LoadUserAccountRepository & SaveFacebookAccountRepository>
+  let token: string
 
-  const token = 'any_token'
-
-  beforeEach(() => {
+  beforeAll(() => {
+    token = 'any_token'
     facebookApi = mock()
     facebookApi.loadUser.mockResolvedValue({
       name: 'any_fb_name',
@@ -26,10 +26,13 @@ describe('facebook-authentication usecase', () => {
       facebookId: 'any_fb_id'
     })
     userAccountRepository = mock()
-    crypto = mock()
-    crypto.generateToken.mockResolvedValue('any_generated_token')
     userAccountRepository.load.mockResolvedValue(undefined)
     userAccountRepository.saveWithFacebook.mockResolvedValue({ id: 'any_account_id' })
+    crypto = mock()
+    crypto.generateToken.mockResolvedValue('any_generated_token')
+  })
+
+  beforeEach(() => {
     sut = new FacebookAuthenticationService(
       facebookApi,
       userAccountRepository,
@@ -39,6 +42,7 @@ describe('facebook-authentication usecase', () => {
 
   test('should call LoadFacebookUserApi with correct params', async () => {
     await sut.execute({ token: 'any_token' })
+
     expect(facebookApi.loadUser).toHaveBeenCalledWith({ token })
     expect(facebookApi.loadUser).toHaveBeenCalledTimes(1)
   })
@@ -46,11 +50,13 @@ describe('facebook-authentication usecase', () => {
   test('should return AuthenticationError when LoadFacebookUserApi returns undefined', async () => {
     facebookApi.loadUser.mockResolvedValueOnce(undefined)
     const authResult = await sut.execute({ token })
+
     expect(authResult).toEqual(new AuthenticationError())
   })
 
   test('should call LoadUserAccountRepository when LoadFacebookUserApi returns data', async () => {
     await sut.execute({ token })
+
     expect(userAccountRepository.load).toHaveBeenCalledWith({ email: 'any_fb_email' })
     expect(userAccountRepository.load).toHaveBeenCalledTimes(1)
   })
@@ -59,6 +65,7 @@ describe('facebook-authentication usecase', () => {
     const FacebookAccountStub = jest.fn().mockImplementation(() => ({ any: 'any' }))
     mocked(FacebookAccount).mockImplementation(FacebookAccountStub)
     await sut.execute({ token })
+
     expect(userAccountRepository.saveWithFacebook).toHaveBeenCalledWith({ any: 'any' })
     expect(userAccountRepository.saveWithFacebook).toHaveBeenCalledTimes(1)
   })
