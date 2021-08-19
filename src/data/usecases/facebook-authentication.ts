@@ -2,7 +2,7 @@ import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@data/
 import { LoadFacebookUserApi } from '@data/protocols/gateways'
 import { AuthenticationError } from '@domain/errors'
 import { FacebookAuthentication } from '@domain/features'
-import { FacebookAccount } from '@domain/models'
+import { AccessToken, FacebookAccount } from '@domain/models'
 import { TokenGenerator } from '@data/protocols/cryptography'
 
 export class FacebookAuthenticationService implements FacebookAuthentication {
@@ -19,7 +19,7 @@ export class FacebookAuthenticationService implements FacebookAuthentication {
       const accountData = await this.userAccountRepository.load({ email: facebookData.email })
       const facebookAccount = new FacebookAccount(facebookData, accountData)
       const { id } = await this.userAccountRepository.saveWithFacebook(facebookAccount)
-      await this.criptography.generateToken({ key: id })
+      await this.criptography.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
     }
     return new AuthenticationError()
   }
