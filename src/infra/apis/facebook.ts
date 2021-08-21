@@ -1,5 +1,5 @@
 import { LoadFacebookUserApi } from '@data/protocols/gateways'
-import { HttpGetClient } from '@data/protocols/http'
+import { HttpGetClient } from '@infra/http'
 
 export class FacebookApi {
   private readonly baseUrl = 'https://graph.facebook.com'
