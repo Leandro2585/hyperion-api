@@ -2,11 +2,11 @@ import { mocked } from 'ts-jest/utils'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 import { AuthenticationError } from '@domain/errors'
-import { LoadFacebookUserApi } from '@data/protocols/gateways'
+import { AccessToken, FacebookAccount } from '@domain/models'
 import { TokenGenerator } from '@data/protocols/cryptography'
+import { LoadFacebookUserApi } from '@data/protocols/gateways'
 import { FacebookAuthenticationService } from '@data/usecases'
 import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@data/protocols/repositories'
-import { AccessToken, FacebookAccount } from '@domain/models'
 
 jest.mock('@domain/models/facebook-account')
 
