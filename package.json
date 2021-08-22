@@ -17,6 +17,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/jest": "^27.0.1",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^16.6.0",
@@ -38,6 +39,7 @@
     "node": "14.x"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "module-alias": "^2.2.2",
     "rimraf": "^3.0.2"
   }
