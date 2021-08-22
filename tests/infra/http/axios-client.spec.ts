@@ -5,8 +5,9 @@ import { HttpGetClient } from '@infra/http'
 jest.mock('axios')
 
 export class AxiosHttpClient {
-  async get (args: HttpGetClient.Params): Promise<void> {
-    await axios.get(args.url, { params: args.params })
+  async get (args: HttpGetClient.Params): Promise<any> {
+    const response = await axios.get(args.url, { params: args.params })
+    return response.data
   }
 }
 
@@ -20,6 +21,7 @@ describe('axios-http client', () => {
     url = 'any_url'
     params = { any: 'any' }
     fakeAxios = axios as jest.Mocked<typeof axios>
+    fakeAxios.get.mockResolvedValue({ status: 200, data: 'any_data' })
   })
   beforeEach(() => {
     sut = new AxiosHttpClient()
@@ -31,6 +33,12 @@ describe('axios-http client', () => {
 
       expect(fakeAxios.get).toHaveBeenCalledWith(url, { params })
       expect(fakeAxios.get).toHaveBeenCalledTimes(1)
+    })
+
+    test('should return data on success', async () => {
+      const response = await sut.get({ url, params })
+
+      expect(response).toEqual('any_data')
     })
   })
 })
