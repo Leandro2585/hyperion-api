@@ -1,1 +1,1 @@
-export * from './user-account-repository'
+export * from './user-account-repository-interface'
