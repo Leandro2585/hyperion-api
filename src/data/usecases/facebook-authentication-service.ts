@@ -1,15 +1,15 @@
-import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@data/protocols/repositories'
-import { LoadFacebookUserApi } from '@data/protocols/gateways'
+import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@data/protocols/repositories'
+import { ILoadFacebookUserApi } from '@data/protocols/gateways'
 import { AuthenticationError } from '@domain/errors'
 import { FacebookAuthentication } from '@domain/features'
 import { AccessToken, FacebookAccount } from '@domain/models'
-import { TokenGenerator } from '@data/protocols/cryptography'
+import { ITokenGenerator } from '@data/protocols/cryptography'
 
 export class FacebookAuthenticationService implements FacebookAuthentication {
   constructor (
-    private readonly facebookApi: LoadFacebookUserApi,
-    private readonly userAccountRepository: LoadUserAccountRepository & SaveFacebookAccountRepository,
-    private readonly criptography: TokenGenerator
+    private readonly facebookApi: ILoadFacebookUserApi,
+    private readonly userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository,
+    private readonly criptography: ITokenGenerator
   ) {}
 
   async execute (params: FacebookAuthentication.Params): Promise<FacebookAuthentication.Result> {

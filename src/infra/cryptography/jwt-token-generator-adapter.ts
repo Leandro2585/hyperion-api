@@ -1,10 +1,10 @@
 import { sign } from 'jsonwebtoken'
 
-import { TokenGenerator } from '@data/protocols/cryptography'
+import { ITokenGenerator } from '@data/protocols/cryptography'
 
-export class JwtTokenGeneratorAdapter implements TokenGenerator {
+export class JwtTokenGeneratorAdapter implements ITokenGenerator {
   constructor (private readonly secret: string) {}
-  async generateToken (params: TokenGenerator.Params): Promise<TokenGenerator.Result> {
+  async generateToken (params: ITokenGenerator.Params): Promise<ITokenGenerator.Result> {
     const expirationInSeconds = params.expirationInMs / 1000
     return sign({ key: params.key }, this.secret, { expiresIn: expirationInSeconds })
   }
