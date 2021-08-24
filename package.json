@@ -33,6 +33,7 @@
     "jest": "^27.0.6",
     "jest-mock-extended": "^2.0.2-beta2",
     "lint-staged": "^11.1.2",
+    "pg-mem": "^1.9.17",
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   },
