@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-import { AxiosHttpClient } from '@infra/http'
+import { AxiosHttpClientAdapter } from '@infra/http'
 
 jest.mock('axios')
 
 describe('axios-http client', () => {
-  let sut: AxiosHttpClient
+  let sut: AxiosHttpClientAdapter
   let fakeAxios: jest.Mocked<typeof axios>
   let url: string
   let params: object
@@ -17,7 +17,7 @@ describe('axios-http client', () => {
     fakeAxios.get.mockResolvedValue({ status: 200, data: 'any_data' })
   })
   beforeEach(() => {
-    sut = new AxiosHttpClient()
+    sut = new AxiosHttpClientAdapter()
   })
 
   describe('GET', () => {
