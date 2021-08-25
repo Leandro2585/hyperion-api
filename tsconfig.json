@@ -19,7 +19,9 @@
       "@validation/*": ["validation/*"],
       "@tests/*": ["../tests/*"]
     },
-    "strict": true
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src", "tests"]
 }
