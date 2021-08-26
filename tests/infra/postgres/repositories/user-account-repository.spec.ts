@@ -1,7 +1,7 @@
-import { newDb } from 'pg-mem'
+import { IBackup, newDb } from 'pg-mem'
 
 import { ILoadUserAccountRepository } from '@data/protocols/repositories'
-import { Entity, PrimaryGeneratedColumn, Column, getRepository } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, getRepository, Repository, getConnection } from 'typeorm'
 
 export class PostgresUserAccountRepository implements ILoadUserAccountRepository {
   async load (params: ILoadUserAccountRepository.Params): Promise<ILoadUserAccountRepository.Result> {
@@ -33,30 +33,38 @@ class PostgresUser {
 
 describe('user-account repository', () => {
   describe('load', () => {
-    test('should return an account if email exists', async () => {
+    let backup: IBackup
+    let postgresUserRepository: Repository<PostgresUser>
+    let sut: PostgresUserAccountRepository
+
+    beforeAll(async () => {
       const database = newDb()
       const connection = await database.adapters.createTypeormConnection({
         type: 'postgres',
         entities: [PostgresUser]
       })
       await connection.synchronize()
-      const postgresUserRepository = getRepository(PostgresUser)
+      backup = database.backup()
+      postgresUserRepository = getRepository(PostgresUser)
+    })
+
+    beforeEach(() => {
+      backup.restore()
+      sut = new PostgresUserAccountRepository()
+    })
+
+    afterAll(async () => {
+      await getConnection().close()
+    })
+
+    test('should return an account if email exists', async () => {
       await postgresUserRepository.save({ email: 'existing_email' })
-      const sut = new PostgresUserAccountRepository()
       const account = await sut.load({ email: 'existing_email' })
 
       expect(account).toEqual({ id: '1' })
-      await connection.close()
     })
 
     test('should return undefined if email does not exists', async () => {
-      const database = newDb()
-      const connection = await database.adapters.createTypeormConnection({
-        type: 'postgres',
-        entities: [PostgresUser]
-      })
-      await connection.synchronize()
-      const sut = new PostgresUserAccountRepository()
       const account = await sut.load({ email: 'new_email' })
 
       expect(account).toBeUndefined()
