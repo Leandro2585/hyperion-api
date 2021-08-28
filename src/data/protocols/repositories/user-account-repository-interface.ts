@@ -26,6 +26,6 @@ export namespace ISaveFacebookAccountRepository {
   }
 
   export type Result = {
-    id: string
+    id: number
   }
 }

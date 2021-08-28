@@ -1,12 +1,27 @@
-import { getRepository } from 'typeorm'
+import { getRepository, Repository } from 'typeorm'
 
-import { ILoadUserAccountRepository } from '@data/protocols/repositories'
+import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@data/protocols/repositories'
 import { PostgresUser } from '@infra/postgres/entities'
 
-export class PostgresUserAccountRepository implements ILoadUserAccountRepository {
+export class PostgresUserAccountRepository implements ILoadUserAccountRepository, ISaveFacebookAccountRepository {
+  postgresUserRepository: Repository<PostgresUser>
+
+  constructor () {
+    this.postgresUserRepository = getRepository(PostgresUser)
+  }
+
+  async saveWithFacebook (params: ISaveFacebookAccountRepository.Params): Promise<ISaveFacebookAccountRepository.Result> {
+    await this.postgresUserRepository.save({
+      email: params.email,
+      name: params.name,
+      facebookId: params.facebookId
+    })
+    const postgresUser = this.postgresUserRepository.findOne({ email: params.email })
+    return { id: postgresUser?.id }
+  }
+
   async load (params: ILoadUserAccountRepository.Params): Promise<ILoadUserAccountRepository.Result> {
-    const postgresUserRepository = getRepository(PostgresUser)
-    const postgresUser = await postgresUserRepository.findOne({ email: params.email })
+    const postgresUser = await this.postgresUserRepository.findOne({ email: params.email })
     if (postgresUser !== undefined) {
       return {
         id: postgresUser.id.toString(),
