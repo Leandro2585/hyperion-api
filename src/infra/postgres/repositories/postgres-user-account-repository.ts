@@ -9,7 +9,7 @@ type LoadResult = ILoadUserAccountRepository.Result
 type SaveParams = ISaveFacebookAccountRepository.Params
 type SaveResult = ISaveFacebookAccountRepository.Result
 
-export class PostgresUserAccountRepository implements ILoadUserAccountRepository {
+export class PostgresUserAccountRepository implements ILoadUserAccountRepository, ISaveFacebookAccountRepository {
   private readonly postgresUserRepository = getRepository(PostgresUser)
 
   async saveWithFacebook (params: SaveParams): Promise<SaveResult> {
