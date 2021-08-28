@@ -7,19 +7,22 @@ type LoadParams = ILoadUserAccountRepository.Params
 type LoadResult = ILoadUserAccountRepository.Result
 
 type SaveParams = ISaveFacebookAccountRepository.Params
-// type SaveResult = ISaveFacebookAccountRepository.Result
+type SaveResult = ISaveFacebookAccountRepository.Result
 
 export class PostgresUserAccountRepository implements ILoadUserAccountRepository {
   private readonly postgresUserRepository = getRepository(PostgresUser)
 
-  async saveWithFacebook (params: SaveParams): Promise<void> {
+  async saveWithFacebook (params: SaveParams): Promise<SaveResult> {
+    let id: string
     if (params.id === undefined) {
-      await this.postgresUserRepository.save({
+      const postgresUser = await this.postgresUserRepository.save({
         email: params.email,
         name: params.name,
         facebookId: params.facebookId
       })
+      id = postgresUser.id.toString()
     } else {
+      id = params.id
       await this.postgresUserRepository.update({
         id: parseInt(params.id)
       }, {
@@ -27,6 +30,7 @@ export class PostgresUserAccountRepository implements ILoadUserAccountRepository
         facebookId: params.facebookId
       })
     }
+    return { id }
   }
 
   async load (params: LoadParams): Promise<LoadResult> {
