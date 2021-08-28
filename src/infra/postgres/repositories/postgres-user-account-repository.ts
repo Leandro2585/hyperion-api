@@ -3,21 +3,28 @@ import { getRepository, Repository } from 'typeorm'
 import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@data/protocols/repositories'
 import { PostgresUser } from '@infra/postgres/entities'
 
-export class PostgresUserAccountRepository implements ILoadUserAccountRepository, ISaveFacebookAccountRepository {
+export class PostgresUserAccountRepository implements ILoadUserAccountRepository {
   postgresUserRepository: Repository<PostgresUser>
 
   constructor () {
     this.postgresUserRepository = getRepository(PostgresUser)
   }
 
-  async saveWithFacebook (params: ISaveFacebookAccountRepository.Params): Promise<ISaveFacebookAccountRepository.Result> {
-    await this.postgresUserRepository.save({
-      email: params.email,
-      name: params.name,
-      facebookId: params.facebookId
-    })
-    const postgresUser = this.postgresUserRepository.findOne({ email: params.email })
-    return { id: postgresUser?.id }
+  async saveWithFacebook (params: ISaveFacebookAccountRepository.Params): Promise<void> {
+    if (params.id === undefined) {
+      await this.postgresUserRepository.save({
+        email: params.email,
+        name: params.name,
+        facebookId: params.facebookId
+      })
+    } else {
+      await this.postgresUserRepository.update({
+        id: parseInt(params.id)
+      }, {
+        name: params.name,
+        facebookId: params.facebookId
+      })
+    }
   }
 
   async load (params: ILoadUserAccountRepository.Params): Promise<ILoadUserAccountRepository.Result> {
