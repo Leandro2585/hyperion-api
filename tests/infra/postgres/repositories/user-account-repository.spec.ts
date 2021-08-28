@@ -42,7 +42,7 @@ describe('user-account repository', () => {
 
   describe('saveWithFacebook', () => {
     test('should create an account if id is undefined', async () => {
-      await sut.saveWithFacebook({
+      const { id } = await sut.saveWithFacebook({
         email: 'any_email',
         name: 'any_name',
         facebookId: 'any_fb_id'
@@ -50,6 +50,7 @@ describe('user-account repository', () => {
       const postgresUser = await postgresUserRepository.findOne({ email: 'any_email' })
 
       expect(postgresUser?.id).toBe(1)
+      expect(id).toBe('1')
     })
 
     test('should update an account if id is defined', async () => {
@@ -58,7 +59,7 @@ describe('user-account repository', () => {
         name: 'any_name',
         facebookId: 'any_fb_id'
       })
-      await sut.saveWithFacebook({
+      const { id } = await sut.saveWithFacebook({
         id: '1',
         name: 'new_name',
         email: 'new_email',
@@ -72,6 +73,7 @@ describe('user-account repository', () => {
         name: 'new_name',
         facebookId: 'new_fb_id'
       })
+      expect(id).toBe('1')
     })
   })
 })
