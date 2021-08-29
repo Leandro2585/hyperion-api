@@ -15,8 +15,7 @@
       "@domain/*": ["domain/*"],
       "@data/*": ["data/*"],
       "@infra/*": ["infra/*"],
-      "@application/*": ["application/*"],
-      "@validation/*": ["validation/*"],
+      "@app/*": ["app/*"],
       "@tests/*": ["../tests/*"]
     },
     "strict": true,
