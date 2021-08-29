@@ -1,8 +1,8 @@
 import { getConnection, getRepository, Repository } from 'typeorm'
 import { IBackup } from 'pg-mem'
 
-import { PostgresUser } from '@infra/postgres/entities'
-import { PostgresUserAccountRepository } from '@infra/postgres/repositories'
+import { PostgresUser } from '@infra/typeorm/entities'
+import { PostgresUserAccountRepository } from '@infra/typeorm/repositories'
 import { makeFakeDatabase } from '../mocks/mock-connection'
 
 describe('user-account repository', () => {
