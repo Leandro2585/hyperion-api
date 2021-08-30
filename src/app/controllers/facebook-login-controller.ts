@@ -1,7 +1,7 @@
-import { Controller, HttpResponse } from '@app/protocols'
-import { ServerError } from '@app/errors'
 import { AccessToken } from '@domain/models'
 import { FacebookAuthentication } from '@domain/features'
+import { Controller, HttpResponse } from '@app/protocols'
+import { ServerError } from '@app/errors'
 
 export class FacebookLoginController implements Controller {
   constructor (private readonly facebookAuthentication: FacebookAuthentication) {}
