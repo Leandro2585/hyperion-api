@@ -3,7 +3,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { FacebookAuthentication } from '@domain/features'
 import { AuthenticationError } from '@domain/errors'
 import { AccessToken } from '@domain/models'
-import { RequiredFieldError, ServerError } from '@app/errors'
+import { RequiredFieldError, ServerError, UnauthorizedError } from '@app/errors'
 import { FacebookLoginController } from '@app/controllers'
 
 describe('facebook-login controller', () => {
@@ -61,7 +61,7 @@ describe('facebook-login controller', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new AuthenticationError()
+      data: new UnauthorizedError()
     })
   })
 
