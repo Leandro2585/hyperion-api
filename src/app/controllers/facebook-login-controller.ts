@@ -1,8 +1,8 @@
 import { AccessToken } from '@domain/models'
 import { FacebookAuthentication } from '@domain/features'
 import { Controller, HttpResponse } from '@app/protocols'
-import { RequiredFieldError, ServerError } from '@app/errors'
-import { badRequest, unauthorized } from '@app/helpers/http-helpers'
+import { RequiredFieldError } from '@app/errors'
+import { badRequest, serverError, unauthorized } from '@app/helpers/http-helpers'
 
 export class FacebookLoginController implements Controller {
   constructor (private readonly facebookAuthentication: FacebookAuthentication) {}
@@ -24,10 +24,7 @@ export class FacebookLoginController implements Controller {
         return unauthorized()
       }
     } catch (error) {
-      return {
-        statusCode: 500,
-        data: new ServerError(error)
-      }
+      return serverError(error)
     }
   }
 }
