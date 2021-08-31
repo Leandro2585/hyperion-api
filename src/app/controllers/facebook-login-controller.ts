@@ -1,7 +1,8 @@
 import { AccessToken } from '@domain/models'
 import { FacebookAuthentication } from '@domain/features'
 import { Controller, HttpResponse } from '@app/protocols'
-import { ServerError } from '@app/errors'
+import { RequiredFieldError, ServerError } from '@app/errors'
+import { badRequest } from '@app/helpers/http-helpers'
 
 export class FacebookLoginController implements Controller {
   constructor (private readonly facebookAuthentication: FacebookAuthentication) {}
@@ -9,10 +10,7 @@ export class FacebookLoginController implements Controller {
   async handle (httpRequest: any): Promise<HttpResponse> {
     try {
       if (httpRequest.token === '' || httpRequest.token === null || httpRequest.token === undefined) {
-        return {
-          statusCode: 400,
-          data: new Error('The field token is required')
-        }
+        return badRequest(new RequiredFieldError('token'))
       }
       const result = await this.facebookAuthentication.execute({ token: httpRequest.token })
       if (result instanceof AccessToken) {
