@@ -4,10 +4,16 @@ import { Controller, HttpResponse } from '@app/protocols'
 import { RequiredFieldError } from '@app/errors'
 import { badRequest, ok, serverError, unauthorized } from '@app/helpers/http-helpers'
 
+type HttpRequest = {
+  token: string | undefined | null
+}
+
+type Model = Error | { accessToken: string }
+
 export class FacebookLoginController implements Controller {
   constructor (private readonly facebookAuthentication: FacebookAuthentication) {}
 
-  async handle (httpRequest: any): Promise<HttpResponse> {
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
     try {
       if (httpRequest.token === '' || httpRequest.token === null || httpRequest.token === undefined) {
         return badRequest(new RequiredFieldError('token'))
