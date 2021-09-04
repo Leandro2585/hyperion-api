@@ -33,7 +33,7 @@ describe('facebook-login controller', () => {
     mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
     const httpResponse = await sut.handle({ token })
 
-    expect(RequiredStringValidator).toHaveBeenCalledWith([
+    expect(ValidationComposite).toHaveBeenCalledWith([
       new RequiredStringValidator('any_token', 'token')
     ])
     expect(httpResponse).toEqual({
@@ -56,7 +56,7 @@ describe('facebook-login controller', () => {
     const httpResponse = await sut.handle({ token })
 
     expect(httpResponse).toEqual({
-      statusCode: 400,
+      statusCode: 401,
       data: new UnauthorizedError()
     })
   })
