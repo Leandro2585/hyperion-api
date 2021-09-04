@@ -19,6 +19,7 @@
       "@tests/*": ["../tests/*"]
     },
     "strict": true,
+    "noImplicitOverride": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
