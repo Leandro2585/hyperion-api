@@ -10,11 +10,12 @@
     "build": "rimraf build && tsc -p tsconfig-build.json",
     "lint": "eslint .",
     "lint:fix": "yarn lint -- --fix",
+    "prepare": "husky install",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test --watch",
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test --coverage",
-    "prepare": "husky install"
+    "test:fb-api": "yarn test -- -c ./jest-integration-config.js tests/external/facebook-api.test.ts"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

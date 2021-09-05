@@ -13,6 +13,7 @@ module.exports = {
     '@infra/(.+)': '<rootDir>/src/infra/$1',
     '@app/(.+)': '<rootDir>/src/app/$1'
   },
+  testMatch: ['**/*.spec.ts'],
   roots: [
     '<rootDir>/src',
     '<rootDir>/tests'
