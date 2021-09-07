@@ -19,6 +19,7 @@
     "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts"
   },
   "devDependencies": {
+    "@jest-mock/express": "^1.4.4",
     "@types/axios": "^0.14.0",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",
