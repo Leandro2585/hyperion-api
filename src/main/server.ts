@@ -1,7 +1,7 @@
-import './config/module-alias'
 import 'reflect-metadata'
-import app from '@main/config/app'
+import '@main/config/module-alias'
+import { app, env } from '@main/config'
 
-app.listen(3333, () => {
-  console.log('Server started at http://localhost:3333/')
+app.listen(env.apiPort, () => {
+  console.log(`Server started at http://localhost:${env.apiPort}/`)
 })
