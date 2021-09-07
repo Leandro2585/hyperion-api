@@ -5,36 +5,26 @@ import { PostgresUser } from '@infra/typeorm/entities'
 
 type LoadParams = ILoadUserAccountRepository.Params
 type LoadResult = ILoadUserAccountRepository.Result
-
 type SaveParams = ISaveFacebookAccountRepository.Params
 type SaveResult = ISaveFacebookAccountRepository.Result
 
 export class PostgresUserAccountRepository implements ILoadUserAccountRepository, ISaveFacebookAccountRepository {
   private readonly postgresUserRepository = getRepository(PostgresUser)
 
-  async saveWithFacebook (params: SaveParams): Promise<SaveResult> {
-    let id: string
-    if (params.id === undefined) {
-      const postgresUser = await this.postgresUserRepository.save({
-        email: params.email,
-        name: params.name,
-        facebookId: params.facebookId
-      })
-      id = postgresUser.id.toString()
+  async saveWithFacebook ({ id, name, email, facebookId }: SaveParams): Promise<SaveResult> {
+    let resultId: string
+    if (id === undefined) {
+      const postgresUser = await this.postgresUserRepository.save({ email, name, facebookId })
+      resultId = postgresUser.id.toString()
     } else {
-      id = params.id
-      await this.postgresUserRepository.update({
-        id: parseInt(params.id)
-      }, {
-        name: params.name,
-        facebookId: params.facebookId
-      })
+      resultId = id
+      await this.postgresUserRepository.update({ id: parseInt(id) }, { name, facebookId })
     }
-    return { id }
+    return { id: resultId }
   }
 
-  async load (params: LoadParams): Promise<LoadResult> {
-    const postgresUser = await this.postgresUserRepository.findOne({ email: params.email })
+  async load ({ email }: LoadParams): Promise<LoadResult> {
+    const postgresUser = await this.postgresUserRepository.findOne({ email })
     if (postgresUser !== undefined) {
       return {
         id: postgresUser.id.toString(),

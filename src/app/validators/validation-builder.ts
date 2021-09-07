@@ -1,6 +1,11 @@
 import { Validator } from '@app/protocols'
 import { RequiredStringValidator } from '@app/validators'
 
+type BuilderParams = {
+  value: string
+  fieldName: string
+}
+
 export class ValidationBuilder {
   private constructor (
     private readonly value: string,
@@ -8,7 +13,7 @@ export class ValidationBuilder {
     private readonly validators: Validator[] = []
   ) {}
 
-  static of (params: { value: string, fieldName: string }): ValidationBuilder {
+  static of (params: BuilderParams): ValidationBuilder {
     return new ValidationBuilder(params.value, params.fieldName)
   }
 
