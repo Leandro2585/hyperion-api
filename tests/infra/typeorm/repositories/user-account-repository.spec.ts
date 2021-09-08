@@ -6,9 +6,9 @@ import { PostgresUserAccountRepository } from '@infra/typeorm/repositories'
 import { makeFakeDatabase } from '../mocks/mock-connection'
 
 describe('user-account repository', () => {
-  let backup: IBackup
   let postgresUserRepository: Repository<PostgresUser>
   let sut: PostgresUserAccountRepository
+  let backup: IBackup
 
   beforeAll(async () => {
     const database = await makeFakeDatabase([PostgresUser])
