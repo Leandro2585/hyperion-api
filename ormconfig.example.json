@@ -1,0 +1,17 @@
+{
+  "type": "",
+  "host": "",
+  "username": "",
+  "password": "",
+  "database": "",
+  "port": 3306,
+  "entities": [
+    "./src/infra/typeorm/entities/*.ts"
+  ],
+  "migrations": [
+    "./src/infra/typeorm/migrations/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/infra/typeorm/migrations"
+  }
+}
