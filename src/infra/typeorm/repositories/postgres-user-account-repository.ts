@@ -17,7 +17,7 @@ export class PostgresUserAccountRepository implements ILoadUserAccountRepository
       resultId = postgresUser.id.toString()
     } else {
       resultId = id
-      await postgresUserRepository.update({ id: parseInt(id) }, { name, facebookId })
+      await postgresUserRepository.update({ id: id }, { name, facebookId })
     }
     return { id: resultId }
   }

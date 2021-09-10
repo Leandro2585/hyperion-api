@@ -16,7 +16,8 @@
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test --coverage",
     "test:integration": "yarn test -- -c ./jest-integration-config.js",
-    "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts"
+    "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts",
+    "typeorm": "sucrase-node ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
     "@jest-mock/express": "^1.4.4",
