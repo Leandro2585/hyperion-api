@@ -65,7 +65,7 @@ describe('user-account repository', () => {
         email: 'new_email',
         facebookId: 'new_fb_id'
       })
-      const postgresUser = await postgresUserRepository.findOne({ id: 1 })
+      const postgresUser = await postgresUserRepository.findOne({ id: '1' })
 
       expect(postgresUser).toEqual({
         id: 1,

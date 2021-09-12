@@ -37,7 +37,7 @@ describe('login route', () => {
         email: 'any_email'
       })
       const { status, body } = await request(app)
-        .post('api/login/facebook')
+        .post('/api/login/facebook')
         .send({ token: 'valid_token' })
 
       expect(status).toBe(200)
@@ -46,7 +46,7 @@ describe('login route', () => {
 
     test('should return 401 with UnauthorizedError', async () => {
       const { status, body } = await request(app)
-        .post('api/login/facebook')
+        .post('/api/login/facebook')
         .send({ token: 'invalid_token' })
 
       expect(status).toBe(401)

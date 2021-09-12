@@ -1,3 +1,6 @@
+const { pathsToModuleNameMapper } = require('ts-jest/utils')
+const { compilerOptions } = require('./tsconfig.json')
+
 module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
@@ -5,14 +8,10 @@ module.exports = {
     '!<rootDir>/src/**/index.ts'
   ],
   coverageDirectory: 'coverage',
-  moduleNameMapper: {
-    '@tests/(.+)': '<rootDir>/tests/$1',
-    '@main/(.+)': '<rootDir>/src/main/$1',
-    '@domain/(.+)': '<rootDir>/src/domain/$1',
-    '@data/(.+)': '<rootDir>/src/data/$1',
-    '@infra/(.+)': '<rootDir>/src/infra/$1',
-    '@app/(.+)': '<rootDir>/src/app/$1'
-  },
+  moduleNameMapper: pathsToModuleNameMapper(
+    compilerOptions.paths,
+    { prefix: '<rootDir>/src/' }
+  ),
   testMatch: ['**/*.spec.ts'],
   roots: [
     '<rootDir>/src',

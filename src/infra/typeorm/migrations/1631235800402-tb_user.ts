@@ -6,11 +6,9 @@ export class tbUser1631235800402 implements MigrationInterface {
       name: 'tb_user',
       columns: [
         {
-          name: 'user_id',
-          type: 'uuid',
-          isPrimary: true,
-          generationStrategy: 'uuid',
-          default: 'u,uid_generate_v4()'
+          name: 'id_user',
+          type: 'varchar',
+          isPrimary: true
         },
         {
           name: 'name',
@@ -21,7 +19,7 @@ export class tbUser1631235800402 implements MigrationInterface {
           type: 'varchar'
         },
         {
-          name: 'password',
+          name: 'id_facebook',
           type: 'varchar'
         }
       ]

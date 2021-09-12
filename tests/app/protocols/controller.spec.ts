@@ -4,7 +4,7 @@ import { ServerError } from '@app/errors'
 import { Controller, HttpResponse } from '@app/protocols'
 import { ValidationComposite } from '@app/validators'
 
-jest.mock('@app/validation/composite')
+jest.mock('@app/validators/validation-composite')
 
 class ControllerStub extends Controller {
   result: HttpResponse = {

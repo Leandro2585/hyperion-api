@@ -17,7 +17,7 @@
     "test:coverage": "yarn test --coverage",
     "test:integration": "yarn test -- -c ./jest-integration-config.js",
     "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts",
-    "typeorm": "sucrase-node ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -53,6 +53,8 @@
     "sucrase": "^3.20.1",
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.4",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.11.0",
     "typescript": "^4.3.5"
   },
   "engines": {

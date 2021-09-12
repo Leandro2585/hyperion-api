@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-@Entity({ name: 'tb_users' })
+@Entity('tb_user')
 export class PostgresUser {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn({ name: 'id_user' })
   id!: string
 
-  @Column({ name: 'name', nullable: true })
+  @Column({ nullable: true })
   name?: string
 
   @Column()
