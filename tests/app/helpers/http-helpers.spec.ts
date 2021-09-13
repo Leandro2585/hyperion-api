@@ -31,4 +31,12 @@ describe('http helpers', () => {
     expect(sut.statusCode).toBe(500)
     expect(sut.data).toEqual(new ServerError(error))
   })
+
+  test('should return 500 with undefined on serverError without instance of Error', () => {
+    const error = 'request_error'
+    const sut = serverError(error)
+
+    expect(sut.statusCode).toBe(500)
+    expect(sut.data).toEqual(new ServerError(undefined))
+  })
 })
