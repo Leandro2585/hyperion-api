@@ -1,6 +1,6 @@
 import { sign } from 'jsonwebtoken'
 
-import { ITokenGenerator } from '@data/protocols/cryptography'
+import { ITokenGenerator } from '@domain/protocols/cryptography'
 
 type Params = ITokenGenerator.Params
 type Result = ITokenGenerator.Result

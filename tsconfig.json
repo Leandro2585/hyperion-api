@@ -13,7 +13,6 @@
     "paths": {
       "@main/*": ["main/*"],
       "@domain/*": ["domain/*"],
-      "@data/*": ["data/*"],
       "@infra/*": ["infra/*"],
       "@app/*": ["app/*"],
       "@tests/*": ["../tests/*"]

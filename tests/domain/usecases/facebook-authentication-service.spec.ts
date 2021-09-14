@@ -3,10 +3,10 @@ import { mock, MockProxy } from 'jest-mock-extended'
 
 import { AuthenticationError } from '@domain/errors'
 import { AccessToken, FacebookAccount } from '@domain/models'
-import { ITokenGenerator } from '@data/protocols/cryptography'
-import { ILoadFacebookUserApi } from '@data/protocols/gateways'
-import { FacebookAuthenticationService } from '@data/usecases'
-import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@data/protocols/repositories'
+import { ITokenGenerator } from '@domain/protocols/cryptography'
+import { ILoadFacebookUserApi } from '@domain/protocols/gateways'
+import { FacebookAuthenticationService } from '@domain/usecases'
+import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@domain/protocols/repositories'
 
 jest.mock('@domain/models/facebook-account')
 
@@ -54,7 +54,7 @@ describe('facebook-authentication usecase', () => {
     expect(authResult).toEqual(new AuthenticationError())
   })
 
-  test('should call ILoadUserAccountRepository when ILoadFacebookUserApi returns data', async () => {
+  test('should call ILoadUserAccountRepository when ILoadFacebookUserApi returns domain', async () => {
     await sut.execute({ token })
 
     expect(userAccountRepository.load).toHaveBeenCalledWith({ email: 'any_fb_email' })
