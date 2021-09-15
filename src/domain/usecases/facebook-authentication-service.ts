@@ -1,35 +1,27 @@
 import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@domain/protocols/repositories'
 import { ILoadFacebookUserApi } from '@domain/protocols/gateways'
 import { AuthenticationError } from '@domain/errors'
-import { FacebookAuthentication } from '@domain/features'
 import { AccessToken, FacebookAccount } from '@domain/models'
 import { ITokenGenerator } from '@domain/protocols/cryptography'
 
-type AuthParams = FacebookAuthentication.Params
-type AuthResult = FacebookAuthentication.Result
+type Setup = (facebookApi: ILoadFacebookUserApi, userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository, criptography: ITokenGenerator) => FacebookAuthentication
 
-export class FacebookAuthenticationService implements FacebookAuthentication {
-  constructor (
-    private readonly facebookApi: ILoadFacebookUserApi,
-    private readonly userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository,
-    private readonly criptography: ITokenGenerator
-  ) {}
+export type FacebookAuthentication = (params: { token: string }) => Promise<AccessToken | AuthenticationError>
 
-  async execute (params: AuthParams): Promise<AuthResult> {
-    const facebookdomain = await this.facebookApi.loadUser(params)
+export const setupFacebookAuthentication: Setup = (facebookApi, userAccountRepository, criptography) => async (params) => {
+  const facebookData = await facebookApi.loadUser(params)
 
-    if (facebookdomain !== undefined) {
-      const accountdomain = await this.userAccountRepository.load({ email: facebookdomain.email })
+  if (facebookData !== undefined) {
+    const accountData = await userAccountRepository.load({ email: facebookData.email })
 
-      const facebookAccount = new FacebookAccount(facebookdomain, accountdomain)
+    const facebookAccount = new FacebookAccount(facebookData, accountData)
 
-      const { id } = await this.userAccountRepository.saveWithFacebook(facebookAccount)
+    const { id } = await userAccountRepository.saveWithFacebook(facebookAccount)
 
-      const token = await this.criptography.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
+    const token = await criptography.generateToken({ key: id, expirationInMs: AccessToken.expirationInMs })
 
-      return new AccessToken(token)
-    }
-
-    return new AuthenticationError()
+    return new AccessToken(token)
   }
+
+  return new AuthenticationError()
 }
