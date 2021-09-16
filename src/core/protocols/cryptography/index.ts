@@ -1,1 +1,2 @@
-export * from './token-generator-interface'
+export * from './token-generator-protocol'
+export * from './token-validator-protocol'

@@ -5,13 +5,13 @@ import { AuthenticationError } from '@core/errors'
 import { AccessToken, FacebookAccount } from '@core/models'
 import { ITokenGenerator } from '@core/protocols/cryptography'
 import { ILoadFacebookUserApi } from '@core/protocols/gateways'
-import { FacebookAuthentication, setupFacebookAuthentication } from '@core/usecases'
+import { FacebookAuthenticationService, setupFacebookAuthentication } from '@core/usecases'
 import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
 
 jest.mock('@core/models/facebook-account')
 
 describe('facebook-authentication usecase', () => {
-  let sut: FacebookAuthentication
+  let sut: FacebookAuthenticationService
   let crypto: MockProxy<ITokenGenerator>
   let facebookApi: MockProxy<ILoadFacebookUserApi>
   let userAccountRepository: MockProxy<ILoadUserAccountRepository & ISaveFacebookAccountRepository>

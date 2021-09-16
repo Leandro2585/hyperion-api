@@ -1,26 +1,12 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 
+import { AuthorizeService, setupAuthorize } from '@core/usecases'
+import { ITokenValidator } from '@core/protocols/cryptography'
+
 jest.mock('@core/models/facebook-account')
 
-interface ITokenValidator {
-  validateToken: (params: ITokenValidator.Params) => Promise<ITokenValidator.Result>
-}
-
-export namespace ITokenValidator {
-  export type Params = { token: string }
-  export type Result = string
-}
-type Setup = (crypto: ITokenValidator) => Authorize
-type Input = { token: string }
-type Output = string
-type Authorize = (params: Input) => Promise<Output>
-const setupAuthorize: Setup = (crypto) => async (params) => {
-  const key = await crypto.validateToken(params)
-  return key
-}
-
 describe('authorize usecase', () => {
-  let sut: Authorize
+  let sut: AuthorizeService
   let crypto: MockProxy<ITokenValidator>
   let token: string
 
