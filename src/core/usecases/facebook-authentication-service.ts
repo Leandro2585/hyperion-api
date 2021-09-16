@@ -5,8 +5,10 @@ import { AccessToken, FacebookAccount } from '@core/models'
 import { ITokenGenerator } from '@core/protocols/cryptography'
 
 type Setup = (facebookApi: ILoadFacebookUserApi, userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository, criptography: ITokenGenerator) => FacebookAuthentication
+type Input = { token: string }
+type Output = { accessToken: string }
 
-export type FacebookAuthentication = (params: { token: string }) => Promise<{ accessToken: string }>
+export type FacebookAuthentication = (params: Input) => Promise<Output>
 
 export const setupFacebookAuthentication: Setup = (facebookApi, userAccountRepository, criptography) => async (params) => {
   const facebookData = await facebookApi.loadUser(params)
