@@ -1,8 +1,8 @@
-import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@domain/protocols/repositories'
-import { ILoadFacebookUserApi } from '@domain/protocols/gateways'
-import { AuthenticationError } from '@domain/errors'
-import { AccessToken, FacebookAccount } from '@domain/models'
-import { ITokenGenerator } from '@domain/protocols/cryptography'
+import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
+import { ILoadFacebookUserApi } from '@core/protocols/gateways'
+import { AuthenticationError } from '@core/errors'
+import { AccessToken, FacebookAccount } from '@core/models'
+import { ITokenGenerator } from '@core/protocols/cryptography'
 
 type Setup = (facebookApi: ILoadFacebookUserApi, userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository, criptography: ITokenGenerator) => FacebookAuthentication
 

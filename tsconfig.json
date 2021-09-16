@@ -12,7 +12,7 @@
     "baseUrl": "src",
     "paths": {
       "@main/*": ["main/*"],
-      "@domain/*": ["domain/*"],
+      "@core/*": ["core/*"],
       "@infra/*": ["infra/*"],
       "@app/*": ["app/*"],
       "@tests/*": ["../tests/*"]

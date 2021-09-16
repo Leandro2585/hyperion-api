@@ -4,4 +4,4 @@ import { resolve } from 'path'
 addAlias('@app', resolve('build/app'))
 addAlias('@main', resolve('build/main'))
 addAlias('@infra', resolve('build/infra'))
-addAlias('@domain', resolve('build/domain'))
+addAlias('@core', resolve('build/core'))

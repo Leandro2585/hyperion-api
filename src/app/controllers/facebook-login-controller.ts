@@ -1,7 +1,7 @@
 import { Controller, HttpResponse, Validator } from '@app/protocols'
 import { ok, unauthorized } from '@app/helpers/http-helpers'
 import { ValidationBuilder } from '@app/validators'
-import { FacebookAuthentication } from '@domain/usecases'
+import { FacebookAuthentication } from '@core/usecases'
 
 type HttpRequest = { token: string }
 type Model = Error | { accessToken: string }

@@ -1,4 +1,4 @@
-import { AccessToken } from '@domain/models'
+import { AccessToken } from '@core/models'
 
 describe('access-token model', () => {
   test('should expire in 1800000 ms', () => {

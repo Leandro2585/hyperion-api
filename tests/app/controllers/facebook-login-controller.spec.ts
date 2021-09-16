@@ -1,4 +1,4 @@
-import { AuthenticationError } from '@domain/errors'
+import { AuthenticationError } from '@core/errors'
 import { UnauthorizedError } from '@app/errors'
 import { FacebookLoginController } from '@app/controllers'
 import { RequiredStringValidator } from '@app/validators'

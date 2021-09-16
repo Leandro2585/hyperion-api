@@ -1,14 +1,14 @@
 import { mocked } from 'ts-jest/utils'
 import { mock, MockProxy } from 'jest-mock-extended'
 
-import { AuthenticationError } from '@domain/errors'
-import { AccessToken, FacebookAccount } from '@domain/models'
-import { ITokenGenerator } from '@domain/protocols/cryptography'
-import { ILoadFacebookUserApi } from '@domain/protocols/gateways'
-import { FacebookAuthentication, setupFacebookAuthentication } from '@domain/usecases'
-import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@domain/protocols/repositories'
+import { AuthenticationError } from '@core/errors'
+import { AccessToken, FacebookAccount } from '@core/models'
+import { ITokenGenerator } from '@core/protocols/cryptography'
+import { ILoadFacebookUserApi } from '@core/protocols/gateways'
+import { FacebookAuthentication, setupFacebookAuthentication } from '@core/usecases'
+import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
 
-jest.mock('@domain/models/facebook-account')
+jest.mock('@core/models/facebook-account')
 
 describe('facebook-authentication usecase', () => {
   let sut: FacebookAuthentication
@@ -54,7 +54,7 @@ describe('facebook-authentication usecase', () => {
     await expect(promise).rejects.toThrow(new AuthenticationError())
   })
 
-  test('should call ILoadUserAccountRepository when ILoadFacebookUserApi returns domain', async () => {
+  test('should call ILoadUserAccountRepository when ILoadFacebookUserApi returns core', async () => {
     await sut({ token })
 
     expect(userAccountRepository.load).toHaveBeenCalledWith({ email: 'any_fb_email' })

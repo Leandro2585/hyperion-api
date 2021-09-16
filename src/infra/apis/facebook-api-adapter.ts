@@ -1,4 +1,4 @@
-import { ILoadFacebookUserApi } from '@domain/protocols/gateways'
+import { ILoadFacebookUserApi } from '@core/protocols/gateways'
 import { HttpGetClient } from '@infra/http'
 
 type AppToken = {
