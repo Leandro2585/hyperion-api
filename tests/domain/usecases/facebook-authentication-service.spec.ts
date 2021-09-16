@@ -47,11 +47,11 @@ describe('facebook-authentication usecase', () => {
     expect(facebookApi.loadUser).toHaveBeenCalledTimes(1)
   })
 
-  test('should return AuthenticationError when ILoadFacebookUserApi returns undefined', async () => {
+  test('should throw AuthenticationError when ILoadFacebookUserApi returns undefined', async () => {
     facebookApi.loadUser.mockResolvedValueOnce(undefined)
-    const authResult = await sut({ token })
+    const promise = sut({ token })
 
-    expect(authResult).toEqual(new AuthenticationError())
+    await expect(promise).rejects.toThrow(new AuthenticationError())
   })
 
   test('should call ILoadUserAccountRepository when ILoadFacebookUserApi returns domain', async () => {
@@ -83,7 +83,7 @@ describe('facebook-authentication usecase', () => {
   test('should return an AccessToken on success', async () => {
     const authResult = await sut({ token })
 
-    expect(authResult).toEqual(new AccessToken('any_generated_token'))
+    expect(authResult).toEqual({ accessToken: 'any_generated_token' })
   })
 
   test('should rethrow if ILoadFacebookUserApi throws', async () => {
