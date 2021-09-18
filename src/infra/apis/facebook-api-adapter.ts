@@ -45,7 +45,6 @@ export class FacebookApi implements ILoadFacebookUserApi {
 
   private async getDebugToken (clientToken: string): Promise<DebugToken> {
     const appToken = await this.getAppToken()
-
     return this.httpClient.get({
       url: `${this.baseUrl}/debug_token`,
       params: {
@@ -57,7 +56,6 @@ export class FacebookApi implements ILoadFacebookUserApi {
 
   private async getUserInfo (clientToken: string): Promise<UserInfo> {
     const debugToken = await this.getDebugToken(clientToken)
-
     return this.httpClient.get({
       url: `${this.baseUrl}/${debugToken.data.user_id}`,
       params: {
