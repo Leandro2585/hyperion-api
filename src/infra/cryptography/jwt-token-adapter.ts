@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken'
+import { JwtPayload, sign, verify } from 'jsonwebtoken'
 
 import { ITokenGenerator, ITokenValidator } from '@core/protocols/cryptography'
 
@@ -15,6 +15,7 @@ export class JwtTokenAdapter implements ITokenGenerator, ITokenValidator {
   }
 
   async validateToken (params: ValidateParams): Promise<ValidateResult> {
-    verify(params.token, this.secret)
+    const payload = verify(params.token, this.secret) as JwtPayload
+    return payload.key
   }
 }
