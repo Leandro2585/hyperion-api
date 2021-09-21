@@ -1,5 +1,5 @@
-import { ServerError, UnauthorizedError } from '@app/errors'
-import { ok, badRequest, unauthorized, serverError } from '@app/helpers/http-helpers'
+import { ForbiddenError, ServerError, UnauthorizedError } from '@app/errors'
+import { ok, badRequest, unauthorized, serverError, forbidden } from '@app/helpers/http-helpers'
 
 describe('http helpers', () => {
   test('should return 200 with correct data on ok', () => {
@@ -22,6 +22,13 @@ describe('http helpers', () => {
 
     expect(sut.statusCode).toBe(401)
     expect(sut.data).toEqual(new UnauthorizedError())
+  })
+
+  test('should return 403 with ForbiddenError on forbidden', () => {
+    const sut = forbidden()
+
+    expect(sut.statusCode).toBe(403)
+    expect(sut.data).toEqual(new ForbiddenError())
   })
 
   test('should return 500 with ServerError on serverError', () => {
