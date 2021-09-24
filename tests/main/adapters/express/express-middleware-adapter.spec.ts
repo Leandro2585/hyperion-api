@@ -14,20 +14,20 @@ describe('express-middleware adapter', () => {
   let res: Response
   let next: NextFunction
   let middleware: MockProxy<Middleware>
+  let sut: RequestHandler
 
-  beforeEach(() => {
+  beforeAll(() => {
     req = getMockReq({ headers: { any: 'any' } })
     res = getMockRes().res
     next = getMockRes().next
-    middleware = mock()
-    middleware.handle.mockResolvedValue({
-      statusCode: 200,
-      data: { any: 'any' }
-    })
+    middleware = mock<Middleware>()
+  })
+
+  beforeEach(() => {
+    sut = adaptExpressMiddleware(middleware)
   })
 
   test('should call handle with correct request', async () => {
-    const sut = adaptExpressMiddleware(middleware)
     await sut(req, res, next)
 
     expect(middleware.handle).toHaveBeenCalledWith({ any: 'any' })
@@ -35,8 +35,7 @@ describe('express-middleware adapter', () => {
   })
 
   test('should call handle with empty request', async () => {
-    const req = getMockReq()
-    const sut = adaptExpressMiddleware(middleware)
+    req = getMockReq()
     await sut(req, res, next)
 
     expect(middleware.handle).toHaveBeenCalledWith({})
