@@ -1,13 +1,13 @@
 import { Controller, HttpResponse, Validator } from '@app/protocols'
 import { ok, unauthorized } from '@app/helpers/http-helpers'
 import { ValidationBuilder } from '@app/validators'
-import { FacebookAuthentication } from '@core/usecases'
+import { FacebookAuthenticationService } from '@core/usecases'
 
 type HttpRequest = { token: string }
 type Model = Error | { accessToken: string }
 
 export class FacebookLoginController extends Controller {
-  constructor (private readonly facebookAuthentication: FacebookAuthentication) {
+  constructor (private readonly facebookAuthentication: FacebookAuthenticationService) {
     super()
   }
 

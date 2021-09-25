@@ -1,1 +1,1 @@
-export * from './jwt-token-generator-factory'
+export * from './jwt-token-factory'
