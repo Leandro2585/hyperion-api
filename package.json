@@ -8,17 +8,17 @@
   "scripts": {
     "start": "sucrase-node src/main/server.ts",
     "build": "rimraf build && tsc -p tsconfig-build.json",
-    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/main/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config --inspect=0.0.0.0:9229 src/main/server.ts",
     "lint": "eslint .",
     "lint:fix": "yarn lint -- --fix",
     "prepare": "husky install",
+    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test --watch",
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test --coverage",
     "test:integration": "yarn test -- -c ./jest-integration-config.js",
-    "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts",
-    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+    "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts"
   },
   "dependencies": {
     "axios": "^0.21.1",

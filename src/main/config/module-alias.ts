@@ -1,7 +1,10 @@
 import { addAlias } from 'module-alias'
 import { resolve } from 'path'
+import { readdirSync } from 'fs'
 
-addAlias('@app', resolve('build/app'))
-addAlias('@main', resolve('build/main'))
-addAlias('@infra', resolve('build/infra'))
-addAlias('@core', resolve('build/core'))
+const rootPath = process.env.TS_NODE_DEV === undefined ? 'build' : 'src'
+const layers = readdirSync(resolve(__dirname, '..', '..', '..', rootPath))
+
+layers.forEach((layer: string) => {
+  addAlias(`@${layer}`, resolve(`${rootPath}/${layer}`))
+})
