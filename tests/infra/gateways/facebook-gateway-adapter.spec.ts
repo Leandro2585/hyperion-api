@@ -1,10 +1,10 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 
 import { HttpGetClient } from '@infra/http'
-import { FacebookApi } from '@infra/apis'
+import { FacebookGateway } from '@infra/gateways'
 
 describe('facebook api', () => {
-  let sut: FacebookApi
+  let sut: FacebookGateway
   let httpClient: MockProxy<HttpGetClient>
   let clientId: string
   let clientSecret: string
@@ -19,7 +19,7 @@ describe('facebook api', () => {
       .mockResolvedValueOnce({ access_token: 'any_app_token' })
       .mockResolvedValueOnce({ data: { user_id: 'any_user_id' } })
       .mockResolvedValueOnce({ id: 'any_fb_id', name: 'any_fb_name', email: 'any_fb_email' })
-    sut = new FacebookApi(httpClient, clientId, clientSecret)
+    sut = new FacebookGateway(httpClient, clientId, clientSecret)
   })
 
   test('should get app token', async () => {

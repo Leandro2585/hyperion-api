@@ -1,1 +1,1 @@
-export * from './facebook-api-interface'
+export * from './facebook-gateway-protocol'

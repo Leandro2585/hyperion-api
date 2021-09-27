@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm'
 
 import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
-import { PostgresUser } from '@infra/typeorm/entities'
+import { PostgresUser } from '@infra/database/entities'
 
 type LoadParams = ILoadUserAccountRepository.Params
 type LoadResult = ILoadUserAccountRepository.Result

@@ -1,5 +1,5 @@
 export const env = {
-  facebookApi: {
+  facebookGateway: {
     clientId: process.env.FB_CLIENT_ID ?? '',
     clientSecret: process.env.FB_CLIENT_SECRET ?? ''
   },

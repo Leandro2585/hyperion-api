@@ -1,5 +1,5 @@
 export interface ITokenValidator {
-  validateToken: (params: ITokenValidator.Params) => Promise<ITokenValidator.Result>
+  validate: (params: ITokenValidator.Params) => Promise<ITokenValidator.Result>
 }
 
 export namespace ITokenValidator {

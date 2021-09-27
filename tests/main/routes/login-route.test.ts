@@ -3,7 +3,7 @@ import { IBackup } from 'pg-mem'
 import { getConnection } from 'typeorm'
 
 import { app } from '@main/config'
-import { PostgresUser } from '@infra/typeorm/entities'
+import { PostgresUser } from '@infra/database/entities'
 import { UnauthorizedError } from '@app/errors'
 import { makeFakeDatabase } from '@tests/infra/typeorm/mocks'
 
@@ -12,7 +12,7 @@ describe('login route', () => {
     let backup: IBackup
     const loadUserSpy = jest.fn()
     jest.mock('@infra/apis/facebook-api-adapter', () => ({
-      FacebookApi: jest.fn().mockReturnValue({
+      facebookGateway: jest.fn().mockReturnValue({
         loadUser: loadUserSpy
       })
     }))

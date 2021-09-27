@@ -9,12 +9,12 @@ type ValidateResult = ITokenValidator.Result
 
 export class JwtTokenAdapter implements ITokenGenerator, ITokenValidator {
   constructor (private readonly secret: string) {}
-  async generateToken ({ key, expirationInMs }: GenerateParams): Promise<GenerateResult> {
+  async generate ({ key, expirationInMs }: GenerateParams): Promise<GenerateResult> {
     const expirationInSeconds = expirationInMs / 1000
     return sign({ key }, this.secret, { expiresIn: expirationInSeconds })
   }
 
-  async validateToken (params: ValidateParams): Promise<ValidateResult> {
+  async validate (params: ValidateParams): Promise<ValidateResult> {
     const payload = verify(params.token, this.secret) as JwtPayload
     return payload.key
   }

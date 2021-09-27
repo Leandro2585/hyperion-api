@@ -1,5 +1,5 @@
 export interface ITokenGenerator {
-  generateToken: (params: ITokenGenerator.Params) => Promise<ITokenGenerator.Result>
+  generate: (params: ITokenGenerator.Params) => Promise<ITokenGenerator.Result>
 }
 
 export namespace ITokenGenerator {
