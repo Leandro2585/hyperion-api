@@ -8,10 +8,10 @@ type Setup = (facebookGateway: LoadFacebookUserGateway, userAccountRepository: I
 type Input = { token: string }
 type Output = { accessToken: string }
 
-export type FacebookAuthenticationService = (params: Input) => Promise<Output>
+export type FacebookAuthenticationService = (input: Input) => Promise<Output>
 
-export const setupFacebookAuthentication: Setup = (facebookGateway, userAccountRepository, tokenCriptography) => async (params) => {
-  const facebookData = await facebookGateway.loadUser(params)
+export const setupFacebookAuthentication: Setup = (facebookGateway, userAccountRepository, tokenCriptography) => async (input) => {
+  const facebookData = await facebookGateway.loadUser(input)
   if (facebookData !== undefined) {
     const accountData = await userAccountRepository.load({ email: facebookData.email })
     const facebookAccount = new FacebookAccount(facebookData, accountData)
