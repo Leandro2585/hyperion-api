@@ -1,1 +1,1 @@
-export * from './user-account-repository-protocol'
+export * from './user-account-repository'

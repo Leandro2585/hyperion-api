@@ -1,1 +1,3 @@
-export * from './facebook-gateway-protocol'
+export * from './facebook-gateway'
+export * from './file-storage'
+export * from './uuid'
