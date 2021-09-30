@@ -1,8 +1,8 @@
-import { mock } from 'jest-mock-extended'
+import { mock, MockProxy } from 'jest-mock-extended'
 
-type Setup = (fileStorage: UploadFile, cryptography: UUIDGenerator) => UploadProfileAvatar
+type Setup = (fileStorage: UploadFile, cryptography: UUIDGenerator) => ChangeProfileAvatarService
 type Input = { userId: string, file: Buffer }
-type UploadProfileAvatar = (input: Input) => Promise<void>
+type ChangeProfileAvatarService = (input: Input) => Promise<void>
 
 const setupUploadProfileAvatar: Setup = (fileStorage, cryptography) => async ({ file, userId }) => {
   await fileStorage.upload({ file, key: cryptography.uuid({ key: userId }) })
@@ -26,13 +26,22 @@ export namespace UUIDGenerator {
 }
 
 describe('upload-profile-avatar usecase', () => {
-  test('should call UploadFile with correct params', async () => {
-    const uuid = 'any_unique_id'
-    const file = Buffer.from('any_buffer')
-    const fileStorage = mock<UploadFile>()
-    const cryptography = mock<UUIDGenerator>()
+  let uuid: string
+  let file: Buffer
+  let fileStorage: MockProxy<UploadFile>
+  let cryptography: MockProxy<UUIDGenerator>
+  let sut: ChangeProfileAvatarService
+
+  beforeEach(() => {
+    uuid = 'any_unique_id'
+    file = Buffer.from('any_buffer')
+    fileStorage = mock()
+    cryptography = mock()
     cryptography.uuid.mockReturnValue(uuid)
-    const sut = setupUploadProfileAvatar(fileStorage, cryptography)
+    sut = setupUploadProfileAvatar(fileStorage, cryptography)
+  })
+
+  test('should call UploadFile with correct params', async () => {
     await sut({ userId: 'any_user_id', file })
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
