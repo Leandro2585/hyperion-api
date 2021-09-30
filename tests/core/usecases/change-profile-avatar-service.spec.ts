@@ -25,4 +25,10 @@ describe('change-profile-avatar usecase', () => {
     expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
+
+  test('should not call UploadFile when file is undefined', async () => {
+    await sut({ userId: 'any_user_id', file: undefined })
+
+    expect(fileStorage.upload).not.toHaveBeenCalled()
+  })
 })
