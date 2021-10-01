@@ -6,8 +6,9 @@ type Input = { userId: string, file?: Buffer }
 export type ChangeProfileAvatarService = (input: Input) => Promise<void>
 
 export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userProfileRepository) => async ({ file, userId }) => {
+  let avatarUrl: string | undefined
   if (file !== undefined) {
-    const avatarUrl = await fileStorage.upload({ file, key: cryptography.uuid({ key: userId }) })
-    await userProfileRepository.saveAvatar({ avatarUrl })
+    avatarUrl = await fileStorage.upload({ file, key: cryptography.uuid({ key: userId }) })
   }
+  await userProfileRepository.saveAvatar({ avatarUrl })
 }

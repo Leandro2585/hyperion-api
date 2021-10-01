@@ -3,5 +3,5 @@ export interface SaveUserAvatar {
 }
 
 export namespace SaveUserAvatar {
-  export type Params = { avatarUrl: string}
+  export type Params = { avatarUrl?: string}
 }
