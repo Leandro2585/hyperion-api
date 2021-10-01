@@ -44,7 +44,7 @@ describe('change-profile-avatar usecase', () => {
   test('should call SaveUserAvatar with correct params', async () => {
     await sut({ userId, file })
 
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: 'any_url' })
+    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: 'any_url', initials: undefined })
     expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
   })
 
