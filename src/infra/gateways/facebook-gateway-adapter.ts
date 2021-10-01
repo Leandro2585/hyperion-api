@@ -1,4 +1,4 @@
-import { ILoadFacebookUser } from '@core/protocols/gateways'
+import { LoadFacebookUser } from '@core/protocols/gateways'
 import { HttpGetClient } from '@infra/http'
 
 type AppToken = {
@@ -15,10 +15,10 @@ type UserInfo = {
   email: string
 }
 
-type Params = ILoadFacebookUser.Params
-type Result = ILoadFacebookUser.Result
+type Params = LoadFacebookUser.Params
+type Result = LoadFacebookUser.Result
 
-export class FacebookGateway implements ILoadFacebookUser {
+export class FacebookGateway implements LoadFacebookUser {
   private readonly baseUrl = 'https://graph.facebook.com'
   constructor (
     private readonly httpClient: HttpGetClient,

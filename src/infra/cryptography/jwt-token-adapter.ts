@@ -1,13 +1,13 @@
 import { JwtPayload, sign, verify } from 'jsonwebtoken'
 
-import { ITokenGenerator, ITokenValidator } from '@core/protocols/cryptography'
+import { TokenGenerator, ITokenValidator } from '@core/protocols/cryptography'
 
-type GenerateParams = ITokenGenerator.Params
-type GenerateResult = ITokenGenerator.Result
+type GenerateParams = TokenGenerator.Params
+type GenerateResult = TokenGenerator.Result
 type ValidateParams = ITokenValidator.Params
 type ValidateResult = ITokenValidator.Result
 
-export class JwtTokenAdapter implements ITokenGenerator, ITokenValidator {
+export class JwtTokenAdapter implements TokenGenerator, ITokenValidator {
   constructor (private readonly secret: string) {}
   async generate ({ key, expirationInMs }: GenerateParams): Promise<GenerateResult> {
     const expirationInSeconds = expirationInMs / 1000

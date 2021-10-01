@@ -5,3 +5,11 @@ export interface SaveUserAvatar {
 export namespace SaveUserAvatar {
   export type Params = { avatarUrl?: string}
 }
+
+export interface LoadUserProfile {
+  load: (params: LoadUserProfile.Params) => Promise<void>
+}
+
+export namespace LoadUserProfile {
+  export type Params = { userId: string }
+}

@@ -1,10 +1,10 @@
-import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
-import { ILoadFacebookUser as LoadFacebookUserGateway } from '@core/protocols/gateways'
+import { LoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
+import { LoadFacebookUser as LoadFacebookUserGateway } from '@core/protocols/gateways'
 import { AuthenticationError } from '@core/errors'
 import { AccessToken, FacebookAccount } from '@core/models'
-import { ITokenGenerator } from '@core/protocols/cryptography'
+import { TokenGenerator } from '@core/protocols/cryptography'
 
-type Setup = (facebookGateway: LoadFacebookUserGateway, userAccountRepository: ILoadUserAccountRepository & ISaveFacebookAccountRepository, tokenCriptography: ITokenGenerator) => FacebookAuthenticationService
+type Setup = (facebookGateway: LoadFacebookUserGateway, userAccountRepository: LoadUserAccountRepository & ISaveFacebookAccountRepository, tokenCriptography: TokenGenerator) => FacebookAuthenticationService
 type Input = { token: string }
 type Output = { accessToken: string }
 

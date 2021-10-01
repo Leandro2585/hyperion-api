@@ -3,18 +3,18 @@ import { mock, MockProxy } from 'jest-mock-extended'
 
 import { AuthenticationError } from '@core/errors'
 import { AccessToken, FacebookAccount } from '@core/models'
-import { ITokenGenerator } from '@core/protocols/cryptography'
-import { ILoadFacebookUser } from '@core/protocols/gateways'
+import { TokenGenerator } from '@core/protocols/cryptography'
+import { LoadFacebookUser } from '@core/protocols/gateways'
 import { FacebookAuthenticationService, setupFacebookAuthentication } from '@core/usecases'
-import { ILoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
+import { LoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
 
 jest.mock('@core/models/facebook-account')
 
 describe('facebook-authentication usecase', () => {
   let sut: FacebookAuthenticationService
-  let tokenCryptography: MockProxy<ITokenGenerator>
-  let facebookGateway: MockProxy<ILoadFacebookUser>
-  let userAccountRepository: MockProxy<ILoadUserAccountRepository & ISaveFacebookAccountRepository>
+  let tokenCryptography: MockProxy<TokenGenerator>
+  let facebookGateway: MockProxy<LoadFacebookUser>
+  let userAccountRepository: MockProxy<LoadUserAccountRepository & ISaveFacebookAccountRepository>
   let token: string
 
   beforeAll(() => {
@@ -40,21 +40,21 @@ describe('facebook-authentication usecase', () => {
     )
   })
 
-  test('should call ILoadFacebookUser with correct params', async () => {
+  test('should call LoadFacebookUser with correct params', async () => {
     await sut({ token: 'any_token' })
 
     expect(facebookGateway.loadUser).toHaveBeenCalledWith({ token })
     expect(facebookGateway.loadUser).toHaveBeenCalledTimes(1)
   })
 
-  test('should throw AuthenticationError when ILoadFacebookUser returns undefined', async () => {
+  test('should throw AuthenticationError when LoadFacebookUser returns undefined', async () => {
     facebookGateway.loadUser.mockResolvedValueOnce(undefined)
     const promise = sut({ token })
 
     await expect(promise).rejects.toThrow(new AuthenticationError())
   })
 
-  test('should call ILoadUserAccountRepository when ILoadFacebookUser returns core', async () => {
+  test('should call LoadUserAccountRepository when LoadFacebookUser returns core', async () => {
     await sut({ token })
 
     expect(userAccountRepository.load).toHaveBeenCalledWith({ email: 'any_fb_email' })
@@ -70,7 +70,7 @@ describe('facebook-authentication usecase', () => {
     expect(userAccountRepository.saveWithFacebook).toHaveBeenCalledTimes(1)
   })
 
-  test('should call ITokenGenerator with correct params', async () => {
+  test('should call TokenGenerator with correct params', async () => {
     await sut({ token })
 
     expect(tokenCryptography.generate).toHaveBeenCalledWith({
@@ -86,14 +86,14 @@ describe('facebook-authentication usecase', () => {
     expect(authResult).toEqual({ accessToken: 'any_generated_token' })
   })
 
-  test('should rethrow if ILoadFacebookUser throws', async () => {
+  test('should rethrow if LoadFacebookUser throws', async () => {
     facebookGateway.loadUser.mockRejectedValueOnce(new Error('fb_error'))
     const promise = sut({ token })
 
     await expect(promise).rejects.toThrow(new Error('fb_error'))
   })
 
-  test('should rethrow if ILoadUserAccountRepository throws', async () => {
+  test('should rethrow if LoadUserAccountRepository throws', async () => {
     userAccountRepository.load.mockRejectedValueOnce(new Error('load_error'))
     const promise = sut({ token })
 
@@ -107,7 +107,7 @@ describe('facebook-authentication usecase', () => {
     await expect(promise).rejects.toThrow(new Error('save_error'))
   })
 
-  test('should rethrow if ITokenGenerator throws', async () => {
+  test('should rethrow if TokenGenerator throws', async () => {
     tokenCryptography.generate.mockRejectedValueOnce(new Error('token_error'))
     const promise = sut({ token })
 

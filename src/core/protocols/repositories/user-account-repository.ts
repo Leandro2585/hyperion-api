@@ -1,8 +1,8 @@
-export interface ILoadUserAccountRepository {
-  load: (params: ILoadUserAccountRepository.Params) => Promise<ILoadUserAccountRepository.Result>
+export interface LoadUserAccountRepository {
+  load: (params: LoadUserAccountRepository.Params) => Promise<LoadUserAccountRepository.Result>
 }
 
-export namespace ILoadUserAccountRepository {
+export namespace LoadUserAccountRepository {
   export type Params = {
     email: string
   }

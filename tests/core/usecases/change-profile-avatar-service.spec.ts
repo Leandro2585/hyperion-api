@@ -1,7 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended'
 
-import { SaveUserAvatar } from '@core/protocols/repositories'
 import { UploadFile, UUIDGenerator } from '@core/protocols/gateways'
+import { LoadUserProfile, SaveUserAvatar } from '@core/protocols/repositories'
 import { ChangeProfileAvatarService, setupUploadProfileAvatar } from '@core/usecases'
 
 describe('change-profile-avatar usecase', () => {
@@ -10,7 +10,7 @@ describe('change-profile-avatar usecase', () => {
   let userId: string
   let fileStorage: MockProxy<UploadFile>
   let cryptography: MockProxy<UUIDGenerator>
-  let userProfileRepository: MockProxy<SaveUserAvatar>
+  let userProfileRepository: MockProxy<SaveUserAvatar & LoadUserProfile>
   let sut: ChangeProfileAvatarService
 
   beforeAll(() => {
@@ -53,5 +53,12 @@ describe('change-profile-avatar usecase', () => {
 
     expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: undefined })
     expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call LoadUserProfile with correct params', async () => {
+    await sut({ userId, file: undefined })
+
+    expect(userProfileRepository.load).toHaveBeenCalledWith({ userId })
+    expect(userProfileRepository.load).toHaveBeenCalledTimes(1)
   })
 })
