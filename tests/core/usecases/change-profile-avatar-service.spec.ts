@@ -61,4 +61,10 @@ describe('change-profile-avatar usecase', () => {
     expect(userProfileRepository.load).toHaveBeenCalledWith({ userId })
     expect(userProfileRepository.load).toHaveBeenCalledTimes(1)
   })
+
+  test('should not call LoadUserProfile if file exists', async () => {
+    await sut({ userId, file })
+
+    expect(userProfileRepository.load).not.toHaveBeenCalled()
+  })
 })

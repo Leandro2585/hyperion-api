@@ -9,7 +9,8 @@ export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userP
   let avatarUrl: string | undefined
   if (file !== undefined) {
     avatarUrl = await fileStorage.upload({ file, key: cryptography.uuid({ key: userId }) })
+  } else {
+    await userProfileRepository.load({ userId })
   }
   await userProfileRepository.saveAvatar({ avatarUrl })
-  await userProfileRepository.load({ userId })
 }
