@@ -4,17 +4,17 @@ import { SaveUserAvatar, LoadUserProfile } from '@core/protocols/repositories'
 
 type Setup = (fileStorage: UploadFile, cryptography: UUIDGenerator, userProfileRepository: SaveUserAvatar & LoadUserProfile) => ChangeProfileAvatarService
 type Input = { userId: string, file?: Buffer }
-export type ChangeProfileAvatarService = (input: Input) => Promise<void>
+type Output = { avatarUrl?: string, initials?: string }
+export type ChangeProfileAvatarService = (input: Input) => Promise<Output>
 
 export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userProfileRepository) => async ({ file, userId }) => {
-  const data: { avatarUrl?: string, name?: string } = {}
-  if (file !== undefined) {
-    data.avatarUrl = await fileStorage.upload({ file, key: cryptography.uuid({ key: userId }) })
-  } else {
-    data.name = (await userProfileRepository.load({ userId })).name
+  const key = cryptography.uuid({ key: userId })
+  const data = {
+    avatarUrl: file !== undefined ? await fileStorage.upload({ file, key }) : undefined,
+    name: file === undefined ? (await userProfileRepository.load({ userId })).name : undefined
   }
   const userProfile = new UserProfile(userId)
-
   userProfile.setAvatar(data)
   await userProfileRepository.saveAvatar(userProfile)
+  return userProfile
 }

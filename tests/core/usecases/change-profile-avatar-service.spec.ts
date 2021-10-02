@@ -65,4 +65,19 @@ describe('change-profile-avatar usecase', () => {
 
     expect(userProfileRepository.load).not.toHaveBeenCalled()
   })
+
+  test('should return correct data on success', async () => {
+    mocked(UserProfile).mockImplementationOnce((id) => ({
+      setAvatar: jest.fn(),
+      id: 'any_user_id',
+      avatarUrl: 'any_url',
+      initials: 'any_initials'
+    }))
+    const result = await sut({ userId, file })
+
+    expect(result).toMatchObject({
+      avatarUrl: 'any_url',
+      initials: 'any_initials'
+    })
+  })
 })
