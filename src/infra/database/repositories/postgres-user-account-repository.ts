@@ -1,14 +1,14 @@
 import { getRepository } from 'typeorm'
 
-import { LoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
+import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@core/protocols/repositories'
 import { PostgresUser } from '@infra/database/entities'
 
 type LoadParams = LoadUserAccountRepository.Params
 type LoadResult = LoadUserAccountRepository.Result
-type SaveParams = ISaveFacebookAccountRepository.Params
-type SaveResult = ISaveFacebookAccountRepository.Result
+type SaveParams = SaveFacebookAccountRepository.Params
+type SaveResult = SaveFacebookAccountRepository.Result
 
-export class PostgresUserAccountRepository implements LoadUserAccountRepository, ISaveFacebookAccountRepository {
+export class PostgresUserAccountRepository implements LoadUserAccountRepository, SaveFacebookAccountRepository {
   async saveWithFacebook ({ id, name, email, facebookId }: SaveParams): Promise<SaveResult> {
     const postgresUserRepository = getRepository(PostgresUser)
     let resultId: string

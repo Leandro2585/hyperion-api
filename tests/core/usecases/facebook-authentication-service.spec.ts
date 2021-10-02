@@ -6,7 +6,7 @@ import { AccessToken, FacebookAccount } from '@core/models'
 import { TokenGenerator } from '@core/protocols/cryptography'
 import { LoadFacebookUser } from '@core/protocols/gateways'
 import { FacebookAuthenticationService, setupFacebookAuthentication } from '@core/usecases'
-import { LoadUserAccountRepository, ISaveFacebookAccountRepository } from '@core/protocols/repositories'
+import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@core/protocols/repositories'
 
 jest.mock('@core/models/facebook-account')
 
@@ -14,7 +14,7 @@ describe('facebook-authentication usecase', () => {
   let sut: FacebookAuthenticationService
   let tokenCryptography: MockProxy<TokenGenerator>
   let facebookGateway: MockProxy<LoadFacebookUser>
-  let userAccountRepository: MockProxy<LoadUserAccountRepository & ISaveFacebookAccountRepository>
+  let userAccountRepository: MockProxy<LoadUserAccountRepository & SaveFacebookAccountRepository>
   let token: string
 
   beforeAll(() => {
@@ -61,12 +61,10 @@ describe('facebook-authentication usecase', () => {
     expect(userAccountRepository.load).toHaveBeenCalledTimes(1)
   })
 
-  test('should call SaveFaceboookAccountRepository with FacebookAccount', async () => {
-    const FacebookAccountStub = jest.fn().mockImplementation(() => ({ any: 'any' }))
-    mocked(FacebookAccount).mockImplementation(FacebookAccountStub)
+  test('should call SaveFaceboookAccount with FacebookAccount', async () => {
     await sut({ token })
 
-    expect(userAccountRepository.saveWithFacebook).toHaveBeenCalledWith({ any: 'any' })
+    expect(userAccountRepository.saveWithFacebook).toHaveBeenCalledWith(mocked(FacebookAccount).mock.instances[0])
     expect(userAccountRepository.saveWithFacebook).toHaveBeenCalledTimes(1)
   })
 
@@ -100,7 +98,7 @@ describe('facebook-authentication usecase', () => {
     await expect(promise).rejects.toThrow(new Error('load_error'))
   })
 
-  test('should rethrow if ISaveFacebookAccountRepository throws', async () => {
+  test('should rethrow if SaveFacebookAccount throws', async () => {
     userAccountRepository.saveWithFacebook.mockRejectedValueOnce(new Error('save_error'))
     const promise = sut({ token })
 

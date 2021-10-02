@@ -1,8 +1,12 @@
+import { mocked } from 'ts-jest/utils'
 import { mock, MockProxy } from 'jest-mock-extended'
 
+import { UserProfile } from '@core/models'
 import { UploadFile, UUIDGenerator } from '@core/protocols/gateways'
 import { LoadUserProfile, SaveUserAvatar } from '@core/protocols/repositories'
 import { ChangeProfileAvatarService, setupUploadProfileAvatar } from '@core/usecases'
+
+jest.mock('@core/models/user-profile')
 
 describe('change-profile-avatar usecase', () => {
   let uuid: string
@@ -45,46 +49,7 @@ describe('change-profile-avatar usecase', () => {
   test('should call SaveUserAvatar with correct params', async () => {
     await sut({ userId, file })
 
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: 'any_url', initials: undefined })
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call SaveUserAvatar with correct params when file is undefined', async () => {
-    await sut({ userId, file: undefined })
-
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: undefined, initials: 'LV' })
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call SaveUserAvatar with correct params when file is undefined', async () => {
-    userProfileRepository.load.mockResolvedValueOnce({ name: 'leandro real vieira' })
-    await sut({ userId, file: undefined })
-
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: undefined, initials: 'LV' })
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call SaveUserAvatar with correct params when file is undefined', async () => {
-    userProfileRepository.load.mockResolvedValueOnce({ name: 'leandro' })
-    await sut({ userId, file: undefined })
-
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: undefined, initials: 'LE' })
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call SaveUserAvatar with correct params when file is undefined', async () => {
-    userProfileRepository.load.mockResolvedValueOnce({ name: 'l' })
-    await sut({ userId, file: undefined })
-
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: undefined, initials: 'L' })
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call SaveUserAvatar with correct params when file is undefined', async () => {
-    userProfileRepository.load.mockResolvedValueOnce({ name: undefined })
-    await sut({ userId, file: undefined })
-
-    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith({ avatarUrl: undefined, initials: undefined })
+    expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith(mocked(UserProfile).mock.instances[0])
     expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
   })
 

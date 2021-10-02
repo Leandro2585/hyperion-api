@@ -3,7 +3,7 @@ export interface SaveUserAvatar {
 }
 
 export namespace SaveUserAvatar {
-  export type Params = { avatarUrl?: string, initials?: string }
+  export type Params = { id: string, avatarUrl?: string, initials?: string }
 }
 
 export interface LoadUserProfile {
