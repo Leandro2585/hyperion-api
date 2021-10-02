@@ -3,13 +3,14 @@ export interface SaveUserAvatar {
 }
 
 export namespace SaveUserAvatar {
-  export type Params = { avatarUrl?: string}
+  export type Params = { avatarUrl?: string, initials?: string }
 }
 
 export interface LoadUserProfile {
-  load: (params: LoadUserProfile.Params) => Promise<void>
+  load: (params: LoadUserProfile.Params) => Promise<LoadUserProfile.Result>
 }
 
 export namespace LoadUserProfile {
   export type Params = { userId: string }
+  export type Result = { name?: string }
 }
