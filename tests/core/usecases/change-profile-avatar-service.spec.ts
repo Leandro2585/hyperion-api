@@ -2,7 +2,7 @@ import { mocked } from 'ts-jest/utils'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 import { UserProfile } from '@core/models'
-import { UploadFile, UUIDGenerator } from '@core/protocols/gateways'
+import { UploadFile, DeleteFile, UUIDGenerator } from '@core/protocols/gateways'
 import { LoadUserProfile, SaveUserAvatar } from '@core/protocols/repositories'
 import { ChangeProfileAvatarService, setupUploadProfileAvatar } from '@core/usecases'
 
@@ -12,7 +12,7 @@ describe('change-profile-avatar usecase', () => {
   let uuid: string
   let file: Buffer
   let userId: string
-  let fileStorage: MockProxy<UploadFile>
+  let fileStorage: MockProxy<UploadFile & DeleteFile>
   let cryptography: MockProxy<UUIDGenerator>
   let userProfileRepository: MockProxy<SaveUserAvatar & LoadUserProfile>
   let sut: ChangeProfileAvatarService
@@ -78,6 +78,14 @@ describe('change-profile-avatar usecase', () => {
     expect(result).toMatchObject({
       avatarUrl: 'any_url',
       initials: 'any_initials'
+    })
+  })
+
+  test('should call DeleteFile when file exists and SaveUserAvatar throws', async () => {
+    userProfileRepository.saveAvatar.mockRejectedValueOnce(new Error())
+    sut({ userId, file }).catch(() => {
+      expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
+      expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })
 })
