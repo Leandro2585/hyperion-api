@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { HttpGetClient } from '@infra/http'
 
-type Input = HttpGetClient.Params
+type Input = HttpGetClient.Input
 
 export class AxiosHttpClientAdapter implements HttpGetClient {
   async get ({ url, params }: Input): Promise<any> {

@@ -30,7 +30,7 @@ describe('jwt-token adapter', () => {
       fakeJwt.sign.mockImplementation(() => token)
     })
 
-    test('should call sign with correct params', async () => {
+    test('should call sign with correct args', async () => {
       await sut.generate({ key, expirationInMs })
 
       expect(fakeJwt.sign).toHaveBeenCalledWith({ key }, secret, { expiresIn: 1 })
@@ -62,7 +62,7 @@ describe('jwt-token adapter', () => {
       fakeJwt.verify.mockImplementation(() => ({ key }))
     })
 
-    test('should call sign with correct params', async () => {
+    test('should call sign with correct args', async () => {
       await sut.validate({ token })
 
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)

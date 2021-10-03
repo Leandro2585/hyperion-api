@@ -1,16 +1,16 @@
 export interface SaveUserAvatar {
-  saveAvatar: (params: SaveUserAvatar.Params) => Promise<void>
+  saveAvatar: (args: SaveUserAvatar.Input) => Promise<void>
 }
 
 export namespace SaveUserAvatar {
-  export type Params = { id: string, avatarUrl?: string, initials?: string }
+  export type Input = { id: string, avatarUrl?: string, initials?: string }
 }
 
 export interface LoadUserProfile {
-  load: (params: LoadUserProfile.Params) => Promise<LoadUserProfile.Result>
+  load: (args: LoadUserProfile.Input) => Promise<LoadUserProfile.Output>
 }
 
 export namespace LoadUserProfile {
-  export type Params = { userId: string }
-  export type Result = { name?: string }
+  export type Input = { userId: string }
+  export type Output = { name?: string }
 }

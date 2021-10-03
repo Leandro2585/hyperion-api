@@ -33,7 +33,7 @@ describe('change-profile-avatar usecase', () => {
     sut = setupUploadProfileAvatar(fileStorage, cryptography, userProfileRepository)
   })
 
-  test('should call UploadFile with correct params', async () => {
+  test('should call UploadFile with correct args', async () => {
     await sut({ userId, file })
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
@@ -46,14 +46,14 @@ describe('change-profile-avatar usecase', () => {
     expect(fileStorage.upload).not.toHaveBeenCalled()
   })
 
-  test('should call SaveUserAvatar with correct params', async () => {
+  test('should call SaveUserAvatar with correct args', async () => {
     await sut({ userId, file })
 
     expect(userProfileRepository.saveAvatar).toHaveBeenCalledWith(mocked(UserProfile).mock.instances[0])
     expect(userProfileRepository.saveAvatar).toHaveBeenCalledTimes(1)
   })
 
-  test('should call LoadUserProfile with correct params', async () => {
+  test('should call LoadUserProfile with correct args', async () => {
     await sut({ userId, file: undefined })
 
     expect(userProfileRepository.load).toHaveBeenCalledWith({ userId })

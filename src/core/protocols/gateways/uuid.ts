@@ -1,8 +1,8 @@
 export interface UUIDGenerator {
-  uuid: (params: UUIDGenerator.Params) => UUIDGenerator.Result
+  uuid: (args: UUIDGenerator.Input) => UUIDGenerator.Output
 }
 
 export namespace UUIDGenerator {
-  export type Params = { key: string }
-  export type Result = string
+  export type Input = { key: string }
+  export type Output = string
 }

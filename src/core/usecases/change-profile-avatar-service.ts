@@ -5,6 +5,7 @@ import { SaveUserAvatar, LoadUserProfile } from '@core/protocols/repositories'
 type Setup = (fileStorage: UploadFile & DeleteFile, cryptography: UUIDGenerator, userProfileRepository: SaveUserAvatar & LoadUserProfile) => ChangeProfileAvatarService
 type Input = { userId: string, file?: Buffer }
 type Output = { avatarUrl?: string, initials?: string }
+
 export type ChangeProfileAvatarService = (input: Input) => Promise<Output>
 
 export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userProfileRepository) => async ({ file, userId }) => {

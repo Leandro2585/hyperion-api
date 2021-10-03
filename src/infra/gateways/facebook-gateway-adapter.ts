@@ -15,8 +15,8 @@ type UserInfo = {
   email: string
 }
 
-type Input = LoadFacebookUser.Params
-type Output = LoadFacebookUser.Result
+type Input = LoadFacebookUser.Input
+type Output = LoadFacebookUser.Output
 
 export class FacebookGateway implements LoadFacebookUser {
   private readonly baseUrl = 'https://graph.facebook.com'
@@ -26,8 +26,8 @@ export class FacebookGateway implements LoadFacebookUser {
     private readonly clientSecret: string
   ) {}
 
-  async loadUser (input: Input): Promise<Output> {
-    return await this.getUserInfo(input.token)
+  async loadUser (args: Input): Promise<Output> {
+    return await this.getUserInfo(args.token)
       .then(({ id, name, email }) => ({ facebookId: id, name, email }))
       .catch(() => undefined)
   }

@@ -5,7 +5,7 @@ import { RequiredStringValidator } from '@app/validators'
 
 type HttpRequest = { authorization: string }
 type Model = Error | { userId: string }
-type AuthorizeService = (params: { token: string }) => Promise<string>
+type AuthorizeService = (args: { token: string }) => Promise<string>
 
 export class AuthenticationMiddleware implements Middleware {
   constructor (private readonly authorize: AuthorizeService) {}

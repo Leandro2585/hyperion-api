@@ -1,16 +1,16 @@
 export interface UploadFile {
-  upload: (params: UploadFile.Params) => Promise<UploadFile.Result>
+  upload: (args: UploadFile.Input) => Promise<UploadFile.Output>
 }
 
 export namespace UploadFile {
-  export type Params = { file: Buffer, key: string }
-  export type Result = string
+  export type Input = { file: Buffer, key: string }
+  export type Output = string
 }
 
 export interface DeleteFile {
-  delete: (params: DeleteFile.Params) => Promise<void>
+  delete: (args: DeleteFile.Input) => Promise<void>
 }
 
 export namespace DeleteFile {
-  export type Params = { key: string }
+  export type Input = { key: string }
 }

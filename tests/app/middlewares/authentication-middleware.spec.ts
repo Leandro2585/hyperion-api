@@ -42,7 +42,7 @@ describe('authentication middleware', () => {
     })
   })
 
-  test('should call authorize with correct params', async () => {
+  test('should call authorize with correct args', async () => {
     await sut.handle({ authorization })
     expect(authorize).toHaveBeenCalledWith({ token: authorization })
     expect(authorize).toHaveBeenCalledTimes(1)

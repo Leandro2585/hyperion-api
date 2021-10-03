@@ -21,7 +21,7 @@ describe('axios-http client', () => {
   })
 
   describe('GET', () => {
-    test('should call GET with correct params', async () => {
+    test('should call GET with correct args', async () => {
       await sut.get({ url, params })
 
       expect(fakeAxios.get).toHaveBeenCalledWith(url, { params })
