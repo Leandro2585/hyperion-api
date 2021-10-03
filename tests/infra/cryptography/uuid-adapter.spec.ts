@@ -11,16 +11,23 @@ export class UUIDAdapter implements UUIDGenerator {
 jest.mock('uuid')
 
 describe('uuid adapter', () => {
+  let sut: UUIDAdapter
+
+  beforeAll(() => {
+    mocked(v4).mockReturnValue('any_uuid')
+  })
+
+  beforeEach(() => {
+    sut = new UUIDAdapter()
+  })
+
   test('should call uuid.v4', () => {
-    const sut = new UUIDAdapter()
     sut.uuid({ key: 'any_key' })
 
     expect(v4).toHaveBeenCalledTimes(1)
   })
 
   test('should return correct uuid', () => {
-    mocked(v4).mockReturnValueOnce('any_uuid')
-    const sut = new UUIDAdapter()
     const uuid = sut.uuid({ key: 'any_key' })
 
     expect(uuid).toBe('any_key_any_uuid')
