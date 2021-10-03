@@ -83,9 +83,20 @@ describe('change-profile-avatar usecase', () => {
 
   test('should call DeleteFile when file exists and SaveUserAvatar throws', async () => {
     userProfileRepository.saveAvatar.mockRejectedValueOnce(new Error())
+    expect.assertions(2)
+
     sut({ userId, file }).catch(() => {
       expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  test('should not call DeleteFile when file does not exists and SaveUserAvatar throws', async () => {
+    userProfileRepository.saveAvatar.mockRejectedValueOnce(new Error())
+    expect.assertions(2)
+
+    sut({ userId, file: undefined }).catch(() => {
+      expect(fileStorage.delete).not.toHaveBeenCalled()
     })
   })
 })
