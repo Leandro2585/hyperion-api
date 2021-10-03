@@ -1,5 +1,6 @@
 import { UserProfile } from '@core/models'
-import { UploadFile, DeleteFile, UUIDGenerator } from '@core/protocols/gateways'
+import { UUIDGenerator } from '@core/protocols/cryptography'
+import { UploadFile, DeleteFile } from '@core/protocols/gateways'
 import { SaveUserAvatar, LoadUserProfile } from '@core/protocols/repositories'
 
 type Setup = (fileStorage: UploadFile & DeleteFile, cryptography: UUIDGenerator, userProfileRepository: SaveUserAvatar & LoadUserProfile) => ChangeProfileAvatarService
