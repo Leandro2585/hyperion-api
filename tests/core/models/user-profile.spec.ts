@@ -40,10 +40,12 @@ describe('user-profile model', () => {
   test('should create with empty initials when name and avatarUrl are not provided', () => {
     sut.setAvatar({})
 
-    expect(sut).toEqual({
-      id: 'any_id',
-      avatarUrl: undefined,
-      initials: undefined
-    })
+    expect(sut).toEqual({ id: 'any_id', avatarUrl: undefined, initials: undefined })
+  })
+
+  test('should create with empty initials when name and avatarUrl are not provided', () => {
+    sut.setAvatar({ name: '' })
+
+    expect(sut).toEqual({ id: 'any_id', avatarUrl: undefined, initials: undefined })
   })
 })
