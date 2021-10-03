@@ -1,8 +1,8 @@
 import { UserProfile } from '@core/models'
-import { UploadFile, UUIDGenerator } from '@core/protocols/gateways'
+import { UploadFile, DeleteFile, UUIDGenerator } from '@core/protocols/gateways'
 import { SaveUserAvatar, LoadUserProfile } from '@core/protocols/repositories'
 
-type Setup = (fileStorage: UploadFile, cryptography: UUIDGenerator, userProfileRepository: SaveUserAvatar & LoadUserProfile) => ChangeProfileAvatarService
+type Setup = (fileStorage: UploadFile & DeleteFile, cryptography: UUIDGenerator, userProfileRepository: SaveUserAvatar & LoadUserProfile) => ChangeProfileAvatarService
 type Input = { userId: string, file?: Buffer }
 type Output = { avatarUrl?: string, initials?: string }
 export type ChangeProfileAvatarService = (input: Input) => Promise<Output>
@@ -15,6 +15,10 @@ export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userP
   }
   const userProfile = new UserProfile(userId)
   userProfile.setAvatar(data)
-  await userProfileRepository.saveAvatar(userProfile)
+  try {
+    await userProfileRepository.saveAvatar(userProfile)
+  } catch {
+    await fileStorage.delete({ key })
+  }
   return userProfile
 }
