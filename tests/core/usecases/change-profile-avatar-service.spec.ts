@@ -99,4 +99,12 @@ describe('change-profile-avatar usecase', () => {
       expect(fileStorage.delete).not.toHaveBeenCalled()
     })
   })
+
+  test('should rethrow if SaveUserAvatar throws', async () => {
+    const error = new Error('save_error')
+    userProfileRepository.saveAvatar.mockRejectedValueOnce(error)
+    const promise = sut({ userId, file })
+
+    await expect(promise).rejects.toThrow(error)
+  })
 })
