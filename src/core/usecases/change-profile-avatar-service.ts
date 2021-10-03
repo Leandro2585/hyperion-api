@@ -17,9 +17,9 @@ export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userP
   userProfile.setAvatar(data)
   try {
     await userProfileRepository.saveAvatar(userProfile)
-  } catch {
+  } catch (error) {
     file !== undefined && await fileStorage.delete({ key })
-    throw new Error()
+    throw error
   }
   return userProfile
 }
