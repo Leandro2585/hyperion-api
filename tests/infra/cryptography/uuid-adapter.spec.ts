@@ -1,12 +1,7 @@
-import { UUIDGenerator } from '@core/protocols/cryptography'
-import { mocked } from 'ts-jest/utils'
 import { v4 } from 'uuid'
+import { mocked } from 'ts-jest/utils'
 
-export class UUIDAdapter implements UUIDGenerator {
-  uuid (args: UUIDGenerator.Input): UUIDGenerator.Output {
-    return `${args.key}_${v4()}`
-  }
-}
+import { UUIDAdapter } from './uuid-adapter'
 
 jest.mock('uuid')
 
