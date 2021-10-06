@@ -4,8 +4,8 @@ class AwsS3FileStorageAdapter {
   constructor (private readonly accessKey: string, private readonly secret: string) {
     config.update({
       credentials: {
-        accessKeyId: '',
-        secretAccessKey: ''
+        accessKeyId: accessKey,
+        secretAccessKey: secret
       }
     })
   }
@@ -14,11 +14,20 @@ class AwsS3FileStorageAdapter {
 jest.mock('aws-sdk')
 
 describe('aws-s3-file-storage adapter', () => {
-  test('should config aws credentials on creation', () => {
-    const accessKey = 'any_access_key'
-    const secret = 'any_secret'
-    const sut = new AwsS3FileStorageAdapter(accessKey, secret)
+  let accessKey: string
+  let secret: string
+  let sut: AwsS3FileStorageAdapter
 
+  beforeEach(() => {
+    sut = new AwsS3FileStorageAdapter(accessKey, secret)
+  })
+
+  beforeAll(() => {
+    accessKey = 'any_access_key'
+    secret = 'any_secret'
+  })
+
+  test('should config aws credentials on creation', () => {
     expect(sut).toBeDefined()
     expect(config.update).toHaveBeenCalledWith({
       accessKeyId: accessKey,
