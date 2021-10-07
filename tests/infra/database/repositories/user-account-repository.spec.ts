@@ -3,7 +3,7 @@ import { IBackup } from 'pg-mem'
 
 import { PostgresUser } from '@infra/database/entities'
 import { PostgresUserAccountRepository } from '@infra/database/repositories'
-import { makeFakeDatabase } from '../mocks/mock-connection'
+import { makeFakeDatabase } from '@tests/infra/database/mocks/mock-connection'
 
 describe('user-account repository', () => {
   let postgresUserRepository: Repository<PostgresUser>

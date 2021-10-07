@@ -14,6 +14,7 @@ describe('facebook api', () => {
     clientSecret = 'any_client_secret'
     httpClient = mock()
   })
+
   beforeEach(() => {
     httpClient.get
       .mockResolvedValueOnce({ access_token: 'any_app_token' })

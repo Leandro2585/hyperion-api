@@ -5,7 +5,7 @@ import { getConnection } from 'typeorm'
 import { app } from '@main/config'
 import { PostgresUser } from '@infra/database/entities'
 import { UnauthorizedError } from '@app/errors'
-import { makeFakeDatabase } from '@tests/infra/typeorm/mocks'
+import { makeFakeDatabase } from '@tests/infra/database/mocks'
 
 describe('login route', () => {
   describe('POST /login/facebook', () => {
