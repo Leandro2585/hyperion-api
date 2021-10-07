@@ -3,7 +3,7 @@ import { mocked } from 'ts-jest/utils'
 
 import { UploadFile } from '@core/protocols/gateways'
 
-export class AwsS3FileStorageAdapter {
+export class AwsS3FileStorageAdapter implements UploadFile {
   constructor (accessKey: string, secret: string, private readonly bucket: string) {
     config.update({
       credentials: {
@@ -13,7 +13,7 @@ export class AwsS3FileStorageAdapter {
     })
   }
 
-  async upload ({ key, file }: UploadFile.Input): Promise<void> {
+  async upload ({ key, file }: UploadFile.Input): Promise<UploadFile.Output> {
     const s3 = new S3()
     await s3.putObject({
       Bucket: this.bucket,
@@ -21,6 +21,7 @@ export class AwsS3FileStorageAdapter {
       Body: file,
       ACL: 'public-read'
     }).promise()
+    return `https://${this.bucket}.s3.amazonaws.com/${encodeURIComponent(key)}`
   }
 }
 
@@ -73,5 +74,17 @@ describe('aws-s3-file-storage adapter', () => {
     })
     expect(putObjectSpy).toHaveBeenCalledTimes(1)
     expect(putObjectPromiseSpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('should return imageUrl', async () => {
+    const imageUrl = await sut.upload({ key, file })
+
+    expect(imageUrl).toBe(`https://${bucket}.s3.amazonaws.com/${key}`)
+  })
+
+  test('should return enconded imageUrl', async () => {
+    const imageUrl = await sut.upload({ key: 'any key', file })
+
+    expect(imageUrl).toBe(`https://${bucket}.s3.amazonaws.com/any%20key`)
   })
 })
