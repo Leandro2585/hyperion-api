@@ -2,7 +2,8 @@ import { mocked } from 'ts-jest/utils'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 import { UserProfile } from '@core/models'
-import { UploadFile, DeleteFile, UUIDGenerator } from '@core/protocols/gateways'
+import { UUIDGenerator } from '@core/protocols/cryptography'
+import { UploadFile, DeleteFile } from '@core/protocols/gateways'
 import { LoadUserProfile, SaveUserAvatar } from '@core/protocols/repositories'
 import { ChangeProfileAvatarService, setupUploadProfileAvatar } from '@core/usecases'
 
@@ -34,6 +35,14 @@ describe('change-profile-avatar usecase', () => {
   })
 
   test('should call UploadFile with correct args', async () => {
+    await sut({ userId, file })
+
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call UploadFile with correct args', async () => {
+    userProfileRepository.load.mockResolvedValueOnce(undefined)
     await sut({ userId, file })
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })

@@ -13,7 +13,7 @@ export const setupUploadProfileAvatar: Setup = (fileStorage, cryptography, userP
   const key = cryptography.uuid({ key: userId })
   const data = {
     avatarUrl: file !== undefined ? await fileStorage.upload({ file, key }) : undefined,
-    name: file === undefined ? (await userProfileRepository.load({ userId })).name : undefined
+    name: file === undefined ? (await userProfileRepository.load({ userId }))?.name : undefined
   }
   const userProfile = new UserProfile(userId)
   userProfile.setAvatar(data)
