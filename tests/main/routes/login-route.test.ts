@@ -3,9 +3,9 @@ import { IBackup } from 'pg-mem'
 import { getConnection } from 'typeorm'
 
 import { app } from '@main/config'
-import { PostgresUser } from '@infra/database/entities'
+import { PostgresUser } from '@infra/typeorm/entities'
 import { UnauthorizedError } from '@app/errors'
-import { makeFakeDatabase } from '@tests/infra/database/mocks'
+import { makeFakeDatabase } from '@tests/infra/typeorm/mocks'
 
 describe('login route', () => {
   describe('POST /login/facebook', () => {

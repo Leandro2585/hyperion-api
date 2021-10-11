@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm'
 
 import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@core/protocols/repositories'
-import { PostgresUser } from '@infra/database/entities'
+import { PostgresUser } from '@infra/typeorm/entities'
 
 type LoadInput= LoadUserAccountRepository.Input
 type LoadOutput = LoadUserAccountRepository.Output
@@ -17,7 +17,7 @@ export class PostgresUserAccountRepository implements LoadUserAccountRepository,
       resultId = postgresUser.id.toString()
     } else {
       resultId = id
-      await postgresUserRepository.update({ id: id }, { name, facebookId })
+      await postgresUserRepository.update({ id }, { name, facebookId })
     }
     return { id: resultId }
   }

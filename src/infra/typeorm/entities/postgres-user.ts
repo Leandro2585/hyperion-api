@@ -13,4 +13,10 @@ export class PostgresUser {
 
   @Column({ name: 'id_facebook', nullable: true })
   facebookId?: string
+
+  @Column()
+  avatarUrl?: string
+
+  @Column()
+  initials?: string
 }
