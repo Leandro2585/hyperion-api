@@ -28,10 +28,19 @@ describe('postgres-user-profile repository', () => {
   describe('saveAvatar', () => {
     test('should update user profile', async () => {
       const { id } = await postgresUserRepository.save({ email: 'any_email', initials: 'any_initials' })
-      await sut.saveAvatar({ id: id.toString(), avatarUrl: 'any_url' })
+      await sut.saveAvatar({ id, avatarUrl: 'any_url' })
       const postgresUser = await postgresUserRepository.findOne({ id })
 
       expect(postgresUser).toMatchObject({ id, avatarUrl: 'any_url', initials: null })
+    })
+  })
+
+  describe('load', () => {
+    test('should load user profile', async () => {
+      const { id } = await postgresUserRepository.save({ name: 'any_name', email: 'any_email' })
+      const userProfile = await sut.load({ userId: id })
+
+      expect(userProfile?.name).toMatchObject('any_name')
     })
   })
 })
