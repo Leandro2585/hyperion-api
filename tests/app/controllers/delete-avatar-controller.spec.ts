@@ -1,12 +1,15 @@
 import { ChangeProfileAvatarService } from '@core/usecases'
+import { HttpResponse } from '@app/protocols'
+import { noContent } from '@app/helpers/http-helpers'
 
 type HttpRequest = { userId: string }
 
 class DeleteAvatarController {
   constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {}
 
-  async handle({ userId }: HttpRequest): Promise<void> {
+  async handle({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfileAvatar({ userId })
+    return noContent()
   }
 }
 
@@ -27,5 +30,14 @@ describe('delete-avatar controller', () => {
 
     expect(changeProfileAvatar).toHaveBeenCalledWith({ userId: 'any_user_id' })
     expect(changeProfileAvatar).toHaveBeenCalledTimes(1)
+  })
+
+  test('should return 204', async () => {
+    const httpResponse = await sut.handle({ userId: 'any_user_id' })
+
+    expect(httpResponse).toEqual({
+      statusCode: 204,
+      data: null
+    })
   })
 })

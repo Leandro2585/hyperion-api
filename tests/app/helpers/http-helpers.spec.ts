@@ -1,5 +1,5 @@
 import { ForbiddenError, ServerError, UnauthorizedError } from '@app/errors'
-import { ok, badRequest, unauthorized, serverError, forbidden } from '@app/helpers/http-helpers'
+import { ok, badRequest, unauthorized, serverError, forbidden, noContent } from '@app/helpers/http-helpers'
 
 describe('http helpers', () => {
   test('should return 200 with correct data on ok', () => {
@@ -7,6 +7,13 @@ describe('http helpers', () => {
 
     expect(sut.statusCode).toBe(200)
     expect(sut.data).toEqual({ any: 'any' })
+  })
+
+  test('should return 204 with null on noContent', () => {
+    const sut = noContent()
+
+    expect(sut.statusCode).toBe(204)
+    expect(sut.data).toEqual(null)
   })
 
   test('should return 400 with error on badRequest', () => {
