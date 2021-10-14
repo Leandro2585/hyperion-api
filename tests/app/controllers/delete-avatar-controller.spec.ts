@@ -1,19 +1,5 @@
-import { ChangeProfileAvatarService } from '@core/usecases'
-import { Controller, HttpResponse } from '@app/protocols'
-import { noContent } from '@app/helpers/http-helpers'
-
-type HttpRequest = { userId: string }
-
-class DeleteAvatarController extends Controller {
-  constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {
-    super()
-  }
-
-  async execute({ userId }: HttpRequest): Promise<HttpResponse> {
-    await this.changeProfileAvatar({ userId })
-    return noContent()
-  }
-}
+import { Controller } from '@app/protocols'
+import { DeleteAvatarController } from '@app/controllers'
 
 describe('delete-avatar controller', () => {
   let changeProfileAvatar: jest.Mock
