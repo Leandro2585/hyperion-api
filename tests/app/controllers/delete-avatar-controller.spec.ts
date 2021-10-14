@@ -1,13 +1,15 @@
 import { ChangeProfileAvatarService } from '@core/usecases'
-import { HttpResponse } from '@app/protocols'
+import { Controller, HttpResponse } from '@app/protocols'
 import { noContent } from '@app/helpers/http-helpers'
 
 type HttpRequest = { userId: string }
 
-class DeleteAvatarController {
-  constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {}
+class DeleteAvatarController extends Controller {
+  constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {
+    super()
+  }
 
-  async handle({ userId }: HttpRequest): Promise<HttpResponse> {
+  async execute({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfileAvatar({ userId })
     return noContent()
   }
@@ -23,6 +25,10 @@ describe('delete-avatar controller', () => {
 
   beforeEach(() => {
     sut = new DeleteAvatarController(changeProfileAvatar)
+  })
+
+  test('should extend controller', () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   test('should call change-profile-avatar with correct args', async () => {
