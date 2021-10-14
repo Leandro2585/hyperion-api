@@ -11,9 +11,18 @@ class DeleteAvatarController {
 }
 
 describe('delete-avatar controller', () => {
+  let changeProfileAvatar: jest.Mock
+  let sut: DeleteAvatarController
+
+  beforeAll(() => {
+    changeProfileAvatar = jest.fn()
+  })
+
+  beforeEach(() => {
+    sut = new DeleteAvatarController(changeProfileAvatar)
+  })
+
   test('should call change-profile-avatar with correct args', async () => {
-    const changeProfileAvatar = jest.fn()
-    const sut = new DeleteAvatarController(changeProfileAvatar)
     await sut.handle({ userId: 'any_user_id' })
 
     expect(changeProfileAvatar).toHaveBeenCalledWith({ userId: 'any_user_id' })
