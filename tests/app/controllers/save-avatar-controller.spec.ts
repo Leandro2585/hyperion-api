@@ -2,7 +2,7 @@ import { RequiredFieldError } from '@app/errors'
 import { badRequest } from '@app/helpers/http-helpers'
 import { HttpResponse } from '@app/protocols'
 
-type HttpRequest = { file: any }
+type HttpRequest = { file: { buffer: Buffer } }
 type Model = Error
 
 export class SaveAvatarController {
@@ -12,13 +12,27 @@ export class SaveAvatarController {
 }
 
 describe('save-avatar controller', () => {
+  let sut: SaveAvatarController
+
+  beforeEach(() => {
+    sut = new SaveAvatarController()
+  })
+
   test('should return 400 if file is not provided', async () => {
-    const sut = new SaveAvatarController()
-    const httpResponse = await sut.handle({ file: undefined })
+    const httpResponse = await sut.handle({ file: undefined as any })
     
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('file')
-    })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldError('file') })
+  })
+
+  test('should return 400 if file is not provided', async () => {
+    const httpResponse = await sut.handle({ file: null as any })
+    
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldError('file') })
+  })
+
+  test('should return 400 if file is empty', async () => {
+    const httpResponse = await sut.handle({ file: { buffer: Buffer.from('') } })
+    
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldError('file') })
   })
 })
