@@ -6,10 +6,10 @@ type HttpRequest = { file: { buffer: Buffer, mimeType: string } }
 type Model = Error
 
 export class SaveAvatarController {
-  async handle({ file }: HttpRequest): Promise<HttpResponse<Model>> {
+  async handle({ file }: HttpRequest): Promise<HttpResponse<Model> | undefined> {
     if(file === undefined || file === null) return badRequest(new RequiredFieldError('file'))
     if(file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
-    return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
+    if(!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
   }
 }
 
@@ -54,6 +54,24 @@ describe('save-avatar controller', () => {
 
   test('should return 400 if file type is invalid', async () => {
     const httpResponse = await sut.handle({ file: { buffer, mimeType: 'invalid_mimetype' } })
+    
+    expect(httpResponse).toEqual({ statusCode: 400, data: new InvalidMimeTypeError(['png', 'jpeg']) })
+  })
+
+  test('should not return 400 if file type is valid', async () => {
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/png' } })
+    
+    expect(httpResponse).toEqual({ statusCode: 400, data: new InvalidMimeTypeError(['png', 'jpeg']) })
+  })
+
+  test('should not return 400 if file type is valid', async () => {
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpg' } })
+    
+    expect(httpResponse).toEqual({ statusCode: 400, data: new InvalidMimeTypeError(['png', 'jpeg']) })
+  })
+
+  test('should not return 400 if file type is valid', async () => {
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpeg' } })
     
     expect(httpResponse).toEqual({ statusCode: 400, data: new InvalidMimeTypeError(['png', 'jpeg']) })
   })
