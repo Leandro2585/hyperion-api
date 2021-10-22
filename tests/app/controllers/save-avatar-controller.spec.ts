@@ -10,6 +10,7 @@ export class SaveAvatarController {
     if(file === undefined || file === null) return badRequest(new RequiredFieldError('file'))
     if(file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
     if(!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
+    if(file.buffer.length > 5 * 1024 * 1024) return badRequest(new MaxFileSizeError(5))
   }
 }
 
@@ -18,6 +19,13 @@ export class InvalidMimeTypeError extends Error {
     super(`Unsupported type. Allowed type: ${allowed.join(', ')}`)
     this.name = 'InvalidMimeTypeError'
   } 
+}
+
+export class MaxFileSizeError extends Error {
+  constructor(maxSizeInMb: number) {
+    super(`File upload limit is ${maxSizeInMb}`)
+    this.name = 'MaxFileSizeError'
+  }
 }
 
 describe('save-avatar controller', () => {
@@ -74,5 +82,15 @@ describe('save-avatar controller', () => {
     const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpeg' } })
     
     expect(httpResponse).toEqual({ statusCode: 400, data: new InvalidMimeTypeError(['png', 'jpeg']) })
+  })
+
+  test('should return 400 if file size is bigger than 5MB', async () => {
+    const invalidBuffer = Buffer.from(new ArrayBuffer(6 * 1024 * 1024))
+    const httpResponse = await sut.handle({ file: { buffer: invalidBuffer, mimeType } })
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new MaxFileSizeError(5)
+    })
   })
 })
