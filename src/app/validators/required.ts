@@ -3,7 +3,7 @@ import { Validator } from '@app/protocols';
 
 export class RequiredValidator implements Validator {
   constructor(
-    readonly value: string, 
+    readonly value: any, 
     readonly fieldName?: string
   ){}
   
