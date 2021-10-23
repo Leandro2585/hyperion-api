@@ -1,37 +1,5 @@
-import { RequiredFieldError } from '@app/errors'
-import { badRequest, ok } from '@app/helpers/http-helpers'
-import { HttpResponse } from '@app/protocols'
-import { ChangeProfileAvatarService } from '@core/usecases'
-
-type HttpRequest = { userId: string, file: { buffer: Buffer, mimeType: string } }
-type Model = Error | { initials?: string, avatarUrl?: string }
-
-export class SaveAvatarController {
-  constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {}
-
-  async handle({ file, userId }: HttpRequest): Promise<HttpResponse<Model> | undefined> {
-    if(file === undefined || file === null) return badRequest(new RequiredFieldError('file'))
-    if(file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
-    if(!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
-    if(file.buffer.length > 5 * 1024 * 1024) return badRequest(new MaxFileSizeError(5))
-    const result = await this.changeProfileAvatar({ userId, file: file.buffer})
-    return ok(result)
-  }
-}
-
-export class InvalidMimeTypeError extends Error {
-  constructor (allowed: string[]) {
-    super(`Unsupported type. Allowed type: ${allowed.join(', ')}`)
-    this.name = 'InvalidMimeTypeError'
-  } 
-}
-
-export class MaxFileSizeError extends Error {
-  constructor(maxSizeInMb: number) {
-    super(`File upload limit is ${maxSizeInMb}`)
-    this.name = 'MaxFileSizeError'
-  }
-}
+import { InvalidMimeTypeError, MaxFileSizeError, RequiredFieldError } from '@app/errors'
+import { SaveAvatarController } from '@app/controllers'
 
 describe('save-avatar controller', () => {
   let sut: SaveAvatarController
