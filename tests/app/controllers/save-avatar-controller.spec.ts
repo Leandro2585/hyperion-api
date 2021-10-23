@@ -1,10 +1,10 @@
 import { RequiredFieldError } from '@app/errors'
-import { badRequest } from '@app/helpers/http-helpers'
+import { badRequest, ok } from '@app/helpers/http-helpers'
 import { HttpResponse } from '@app/protocols'
 import { ChangeProfileAvatarService } from '@core/usecases'
 
 type HttpRequest = { userId: string, file: { buffer: Buffer, mimeType: string } }
-type Model = Error
+type Model = Error | { initials?: string, avatarUrl?: string }
 
 export class SaveAvatarController {
   constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {}
@@ -14,7 +14,8 @@ export class SaveAvatarController {
     if(file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
     if(!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
     if(file.buffer.length > 5 * 1024 * 1024) return badRequest(new MaxFileSizeError(5))
-    await this.changeProfileAvatar({ userId, file: file.buffer})
+    const result = await this.changeProfileAvatar({ userId, file: file.buffer})
+    return ok(result)
   }
 }
 
@@ -39,12 +40,16 @@ describe('save-avatar controller', () => {
   let file: { buffer: Buffer, mimeType: string }
   let userId: string
   let changeProfileAvatar: jest.Mock
+
   beforeAll(() => {
     buffer = Buffer.from('any_buffer')
     mimeType = 'image/jpg'
     file = { buffer, mimeType }
     userId = 'any_user_id'
-    changeProfileAvatar = jest.fn()
+    changeProfileAvatar = jest.fn().mockResolvedValue({ 
+      initials: 'any_initials', 
+      avatarUrl: 'any_avatar_url' 
+    })
   })
 
   beforeEach(() => {
@@ -108,5 +113,14 @@ describe('save-avatar controller', () => {
 
     expect(changeProfileAvatar).toHaveBeenCalledWith({ id: userId, file: file.buffer })
     expect(changeProfileAvatar).toHaveBeenCalledTimes(1)
+  })
+
+  test('should return 200 with valid data', async () => {
+    const httpResponse = await sut.handle({ file, userId })
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { initials: 'any_initials', avatarUrl: 'any_avatar_url' }
+    })
   })
 })
