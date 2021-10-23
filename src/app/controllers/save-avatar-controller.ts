@@ -11,7 +11,7 @@ export class SaveAvatarController extends Controller {
     super()
   }
 
-  override async execute ({ file, userId }: HttpRequest): Promise<HttpResponse<Model | undefined>> {
+  override async execute ({ file, userId }: HttpRequest): Promise<HttpResponse<Model>> {
     if(file === undefined || file === null) return badRequest(new RequiredFieldError('file'))
     if(file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
     if(!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
