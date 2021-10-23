@@ -1,5 +1,6 @@
 import { InvalidMimeTypeError, MaxFileSizeError, RequiredFieldError } from '@app/errors'
 import { SaveAvatarController } from '@app/controllers'
+import { Controller } from '@app/protocols'
 
 describe('save-avatar controller', () => {
   let sut: SaveAvatarController
@@ -22,6 +23,10 @@ describe('save-avatar controller', () => {
 
   beforeEach(() => {
     sut = new SaveAvatarController(changeProfileAvatar)
+  })
+
+  test('should extend controller', () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   test('should return 400 if file is not provided', async () => {
