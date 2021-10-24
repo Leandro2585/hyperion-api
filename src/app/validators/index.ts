@@ -1,4 +1,5 @@
 export * from './required'
+export * from './max-file-size'
 export * from './required-buffer'
 export * from './required-string'
 export * from './allowed-mime-types'
