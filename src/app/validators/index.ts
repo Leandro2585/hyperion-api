@@ -1,5 +1,6 @@
 export * from './required'
 export * from './required-buffer'
 export * from './required-string'
+export * from './allowed-mime-types'
 export * from './validation-builder'
 export * from './validation-composite'
