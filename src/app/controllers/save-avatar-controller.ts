@@ -1,7 +1,7 @@
-import { ChangeProfileAvatarService } from '@core/usecases'
-import { ok } from '@app/helpers/http-helpers'
 import { Controller, HttpResponse, Validator } from '@app/protocols'
-import { AllowedMimeTypesValidator, MaxFileSizeValidator, RequiredBufferValidator, RequiredValidator } from '@app/validators'
+import { ValidationBuilder } from '@app/validators'
+import { ok } from '@app/helpers/http-helpers'
+import { ChangeProfileAvatarService } from '@core/usecases'
 
 type HttpRequest = { userId: string, file: { buffer: Buffer, mimeType: string } }
 type Model = Error | { initials?: string, avatarUrl?: string }
@@ -18,10 +18,10 @@ export class SaveAvatarController extends Controller {
 
   override buildValidators({ file }: HttpRequest): Validator[] {
     return [
-      new RequiredValidator(file, 'file'),
-      new RequiredBufferValidator(file.buffer, 'file'),
-      new AllowedMimeTypesValidator(['png', 'jpg'], file.mimeType),
-      new MaxFileSizeValidator(5, file.buffer)
+      ...ValidationBuilder.of({ value: file, fieldName: 'file' })
+        .required()
+        .image({ allowedExtensions: ['png', 'jpg'], maxSizeInMb: 5 })
+        .build()
     ]
   }
 }

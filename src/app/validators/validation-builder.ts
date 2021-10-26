@@ -1,5 +1,5 @@
 import { Validator } from '@app/protocols'
-import { RequiredStringValidator, RequiredValidator, RequiredBufferValidator } from '@app/validators'
+import { RequiredStringValidator, RequiredValidator, RequiredBufferValidator, AllowedMimeTypesValidator, AllowedExtensions, MaxFileSizeValidator } from '@app/validators'
 
 type BuilderParams = {
   value: any
@@ -18,9 +18,14 @@ export class ValidationBuilder {
   }
 
   required(): ValidationBuilder {
-    if(this.value instanceof Buffer) return this.buffer()
-    else if (typeof this.value === 'string') return this.string()
-    else if (typeof this.value === 'object') return this.object()
+    if(this.value instanceof Buffer) this.buffer(this.value)
+    else if (typeof this.value === 'string') this.string()
+    else if (typeof this.value === 'object') {
+      this.object()
+      if(this.value.buffer !== undefined) {
+        this.buffer(this.value.buffer)
+      }
+    }
     return this
   }
 
@@ -29,13 +34,23 @@ export class ValidationBuilder {
     return this
   }
 
-  buffer (): ValidationBuilder {
-    this.validators.push(new RequiredBufferValidator(this.value, this.fieldName))
+  buffer (value: Buffer): ValidationBuilder {
+    this.validators.push(new RequiredBufferValidator(value, this.fieldName))
     return this
   }
 
   string (): ValidationBuilder {
     this.validators.push(new RequiredStringValidator(this.value, this.fieldName))
+    return this
+  }
+
+  image(args: { allowedExtensions: AllowedExtensions[], maxSizeInMb: number }): ValidationBuilder {
+    if(this.value.mimeType !== undefined) {
+      this.validators.push(new AllowedMimeTypesValidator(args.allowedExtensions, this.value.mimeType))
+    }
+    if(this.value.buffer !== undefined) {
+      this.validators.push(new MaxFileSizeValidator(args.maxSizeInMb, this.value.buffer))
+    }
     return this
   }
 
