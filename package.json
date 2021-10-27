@@ -18,7 +18,8 @@
     "test:staged": "yarn test --findRelatedTests",
     "test:coverage": "yarn test --coverage",
     "test:integration": "yarn test -- -c ./jest-integration-config.js",
-    "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts"
+    "test:fb-api": "yarn test:integration -- tests/external/facebook-api.test.ts",
+    "test:s3": "yarn test:integration -- tests/external/aws-s3-file-storage-external.test.ts"
   },
   "dependencies": {
     "aws-sdk": "^2.1001.0",
