@@ -12,12 +12,12 @@ describe('aws-s3-file-storage integration tests', () => {
 
   test('should upload and delete image from aws S3', async () => {
     const file = Buffer.from('any_buffer', 'base64')
-    const key = 'any_key.png'
-    const avatarUrl = await sut.upload({ key, file })
+    const fileName = 'any_file_name.png'
+    const avatarUrl = await sut.upload({ fileName, file })
   
     expect((await axios.get(avatarUrl)).status).toBe(200)
 
-    await sut.delete({ key })
+    await sut.delete({ fileName })
 
     await expect(axios.get(avatarUrl)).rejects.toThrow()
   })

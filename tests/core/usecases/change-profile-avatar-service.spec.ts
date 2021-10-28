@@ -11,7 +11,9 @@ jest.mock('@core/models/user-profile')
 
 describe('change-profile-avatar usecase', () => {
   let uuid: string
-  let file: Buffer
+  let file: { buffer: Buffer, mimeType: string }
+  let buffer: Buffer
+  let mimeType: string
   let userId: string
   let fileStorage: MockProxy<UploadFile & DeleteFile>
   let cryptography: MockProxy<UUIDGenerator>
@@ -21,7 +23,9 @@ describe('change-profile-avatar usecase', () => {
   beforeAll(() => {
     uuid = 'any_unique_id'
     userId = 'any_user_id'
-    file = Buffer.from('any_buffer')
+    buffer = Buffer.from('any_buffer')
+    mimeType = 'image/png'
+    file = { buffer, mimeType }
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue('any_url')
     cryptography = mock()
@@ -37,15 +41,15 @@ describe('change-profile-avatar usecase', () => {
   test('should call UploadFile with correct args', async () => {
     await sut({ userId, file })
 
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName: uuid })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 
   test('should call UploadFile with correct args', async () => {
     userProfileRepository.load.mockResolvedValueOnce(undefined)
-    await sut({ userId, file })
+    await sut({ userId, file: { buffer, mimeType: 'image/png' } })
 
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName: `${uuid}.png` })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 
@@ -95,7 +99,7 @@ describe('change-profile-avatar usecase', () => {
     expect.assertions(2)
 
     sut({ userId, file }).catch(() => {
-      expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
+      expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: uuid })
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })

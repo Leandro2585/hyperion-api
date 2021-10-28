@@ -44,7 +44,7 @@ describe('save-avatar controller', () => {
   test('should call change-profile-avatar with correct args', async () => {
     await sut.handle({ file, userId })
 
-    expect(changeProfileAvatar).toHaveBeenCalledWith({ id: userId, file: file.buffer })
+    expect(changeProfileAvatar).toHaveBeenCalledWith({ id: userId, file })
     expect(changeProfileAvatar).toHaveBeenCalledTimes(1)
   })
 

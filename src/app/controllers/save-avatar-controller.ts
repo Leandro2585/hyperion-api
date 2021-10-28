@@ -12,7 +12,7 @@ export class SaveAvatarController extends Controller {
   }
 
   async execute ({ file, userId }: HttpRequest): Promise<HttpResponse<Model>> {
-    const result = await this.changeProfileAvatar({ userId, file: file.buffer })
+    const result = await this.changeProfileAvatar({ userId, file })
     return ok(result)
   }
 
