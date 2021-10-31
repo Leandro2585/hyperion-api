@@ -43,6 +43,13 @@ describe('postgres-user-profile repository', () => {
       expect(userProfile?.name).toMatchObject('any_name')
     })
 
+    test('should load user profile', async () => {
+      const { id } = await postgresUserRepository.save({ email: 'any_email' })
+      const userProfile = await sut.load({ userId: id })
+
+      expect(userProfile?.name).toBeUndefined()
+    })
+
     test('should return undefined', async () => {
       const userProfile = await sut.load({ userId: 'invalid_id' })
 

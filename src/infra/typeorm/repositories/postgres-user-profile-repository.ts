@@ -12,6 +12,6 @@ export class PostgresUserProfileRepository implements SaveUserAvatar, LoadUserPr
   async load ({ userId }: LoadUserProfile.Input): Promise<LoadUserProfile.Output> {
     const postgresUserRepository = getRepository(PostgresUser)
     const postgresUser = await postgresUserRepository.findOne({ id: userId })
-    if(postgresUser !== undefined) return { name: postgresUser.name }
+    if(postgresUser !== undefined) return { name: postgresUser.name ?? undefined }
   }
 }
