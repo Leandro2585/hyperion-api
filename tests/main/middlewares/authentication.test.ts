@@ -16,12 +16,8 @@ describe('authentication middleware', () => {
 
   test('should return 200 if authorization is valid', async () => {
     const authorization = sign({ key: 'any_user_id' }, env.jwtSecret)
-    app.get('/fake_route', auth, (req, res) => {
-      res.json(req.locals)
-    })
-    const { status, body } = await request(app)
-      .get('/fake_route')
-      .set({ authorization })
+    app.get('/fake_route', auth, (req, res) => res.json(req.locals))
+    const { status, body } = await request(app).get('/fake_route').set({ authorization })
 
     expect(status).toBe(200)
     expect(body).toEqual({ userId: 'any_user_id' })
