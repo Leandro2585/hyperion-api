@@ -30,7 +30,7 @@ describe('save-avatar controller', () => {
     expect(sut).toBeInstanceOf(Controller)
   })
 
-  test('should build validators correctly', async () => {
+  test('should build validators correctly on save', async () => {
     const validators = sut.buildValidators({ file, userId })
 
     expect(validators).toEqual([
@@ -39,6 +39,12 @@ describe('save-avatar controller', () => {
       new AllowedMimeTypesValidator(['png', 'jpg'], mimeType),
       new MaxFileSizeValidator(5, buffer)
     ])
+  })
+
+  test('should build validators correctly on delete', async () => {
+    const validators = sut.buildValidators({ file: undefined, userId })
+
+    expect(validators).toEqual([])
   })
 
   test('should call change-profile-avatar with correct args', async () => {

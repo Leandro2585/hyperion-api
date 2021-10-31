@@ -3,8 +3,8 @@ import { ValidationBuilder } from '@app/validators'
 import { ok } from '@app/helpers/http-helpers'
 import { ChangeProfileAvatarService } from '@core/usecases'
 
-type HttpRequest = { userId: string, file: { buffer: Buffer, mimeType: string } }
-type Model = Error | { initials?: string, avatarUrl?: string }
+type HttpRequest = { userId: string, file?: { buffer: Buffer, mimeType: string } }
+type Model = { initials?: string, avatarUrl?: string }
 
 export class SaveAvatarController extends Controller {
   constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {
@@ -12,11 +12,12 @@ export class SaveAvatarController extends Controller {
   }
 
   async execute ({ file, userId }: HttpRequest): Promise<HttpResponse<Model>> {
-    const result = await this.changeProfileAvatar({ userId, file })
-    return ok(result)
+    const { initials, avatarUrl } = await this.changeProfileAvatar({ userId, file })
+    return ok({ initials, avatarUrl })
   }
 
   override buildValidators({ file }: HttpRequest): Validator[] {
+    if(file === undefined) return []
     return [
       ...ValidationBuilder.of({ value: file, fieldName: 'file' })
         .required()
