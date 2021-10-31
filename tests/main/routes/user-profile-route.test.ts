@@ -29,15 +29,15 @@ describe('user-profile routes', () => {
       expect(status).toBe(403)
     })
 
-    test('should return 204', async () => {
-      const { id } = await postgresUserRepository.save({ email: 'any_email' })
+    test('should return 200 with valid data', async () => {
+      const { id } = await postgresUserRepository.save({ name: 'Leandro Real', email: 'any_email' })
       const authorization = sign({ key: id }, env.jwtSecret)
       const { status, body } = await request(app)
-      .delete('/api/users/avatar')
-      .set({ authorization })
+        .delete('/api/users/avatar')
+        .set({ authorization })
     
-      expect(status).toBe(204)
-      expect(body).toEqual({})
+      expect(status).toBe(200)
+      expect(body).toEqual({ avatarUrl: undefined, initials: 'LR' })
     })
   })
 })
