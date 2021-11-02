@@ -27,24 +27,34 @@ jest.mock('typeorm', () => ({
 }))
 
 describe('postgres connection', () => {
+  let getConnectionManagerSpy: jest.Mock
+  let createQueryRunnerSpy: jest.Mock
+  let createConnectionSpy: jest.Mock
+  let sut: PostgresConnection
+
+  beforeAll(() => {
+    getConnectionManagerSpy = jest.fn().mockReturnValue({
+      has: jest.fn().mockReturnValue(false)
+    })
+    mocked(getConnectionManager).mockImplementation(getConnectionManagerSpy)
+    createQueryRunnerSpy = jest.fn()
+    createConnectionSpy = jest.fn().mockResolvedValue({
+      createQueryRunner: createQueryRunnerSpy
+    })
+    mocked(createConnection).mockImplementation(createConnectionSpy)
+  })
+  
+  beforeEach(() => {
+    sut = PostgresConnection.getInstance()
+  })
+  
   test('should have only one instance', () => {
-    const sut = PostgresConnection.getInstance()
     const sut2 = PostgresConnection.getInstance()
     
     expect(sut).toBe(sut2)
   })
 
   test('should create a new connection', async () => {
-    const getConnectionManagerSpy = jest.fn().mockReturnValueOnce({
-      has: jest.fn().mockReturnValueOnce(false)
-    })
-    mocked(getConnectionManager).mockImplementationOnce(getConnectionManagerSpy)
-    const createQueryRunnerSpy = jest.fn()
-    const createConnectionSpy = jest.fn().mockResolvedValueOnce({
-      createQueryRunner: createQueryRunnerSpy
-    })
-    mocked(createConnection).mockImplementationOnce(createConnectionSpy)
-    const sut = PostgresConnection.getInstance()
     await sut.connect()
 
     expect(createConnectionSpy).toHaveBeenCalledWith()
