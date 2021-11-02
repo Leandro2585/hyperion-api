@@ -2,26 +2,9 @@ import multer from 'multer'
 import { mocked } from 'ts-jest/utils'
 import { RequestHandler, Request, Response, NextFunction } from 'express'
 import { getMockReq, getMockRes} from '@jest-mock/express'
-import { ServerError } from '@app/errors'
 
-const adaptMulter: RequestHandler = (request, response, next) => {
-  const upload = multer().single('avatar')
-  upload(request, response, (error) => {
-    if(error !== undefined) {
-      return response.status(500).json({ error: new ServerError(error).message })
-    }
-    if(request.file !== undefined) {
-      request.locals = { 
-        ...request.locals, 
-        file: { 
-          buffer: request.file.buffer, 
-          mimeType: request.file.mimetype 
-        }
-      }
-    }
-    next()
-  })
-}
+import { adaptMulter } from '@main/adapters/multer'
+import { ServerError } from '@app/errors'
 
 jest.mock('multer')
 
