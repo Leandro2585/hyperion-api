@@ -7,7 +7,18 @@ import { ServerError } from '@app/errors'
 const adaptMulter: RequestHandler = (request, response, next) => {
   const upload = multer().single('avatar')
   upload(request, response, (error) => {
-    response.status(500).json({ error: new ServerError(error).message })
+    if(error !== undefined) {
+      return response.status(500).json({ error: new ServerError(error).message })
+    }
+    if(request.file !== undefined) {
+      request.locals = { 
+        ...request.locals, 
+        file: { 
+          buffer: request.file.buffer, 
+          mimeType: request.file.mimetype 
+        }
+      }
+    }
   })
 }
 
@@ -24,17 +35,20 @@ describe('multer adapter', () => {
   let sut: RequestHandler
 
   beforeAll(() => {
-    uploadSpy = jest.fn().mockImplementation(() => {})
+    uploadSpy = jest.fn().mockImplementation((req, res, next) => {
+      req.file = { buffer: Buffer.from('any_buffer'), mimetype: 'any_type'}
+      next()
+    })
     singleSpy = jest.fn().mockImplementation(() => uploadSpy)
     multerSpy = jest.fn().mockImplementation(() => ({ single: singleSpy }))
     fakeMulter = multer as jest.Mocked<typeof multer>
     mocked(fakeMulter).mockImplementation(multerSpy)
-    req = getMockReq()
     res = getMockRes().res
     next = getMockRes().next
   })
-
+  
   beforeEach(() => {
+    req = getMockReq({ locals: { anyLocals: 'any_locals' }})
     sut = adaptMulter
   })
 
@@ -51,14 +65,33 @@ describe('multer adapter', () => {
 
   test('should return 500 if upload fails', () => {
     const error = new Error('multer_error')
-    uploadSpy = jest.fn().mockImplementationOnce((req, res, next) => {
-      next(error)
-    })
+    uploadSpy = jest.fn().mockImplementationOnce((req, res, next) => next(error))
     sut(req, res, next)
 
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.status).toHaveBeenCalledTimes(1)
     expect(res.json).toHaveBeenCalledWith({ error: new ServerError(error).message })
     expect(res.json).toHaveBeenCalledTimes(1)
+  })
+
+  test('should not add file to request.locals', () => {
+    uploadSpy = jest.fn().mockImplementationOnce((req, res, next) => {
+      next()
+    })
+    sut(req, res, next)
+
+    expect(req.locals).toEqual({ anyLocals: 'any_locals' })
+  })
+
+  test('should add file to request.locals', () => {
+    sut(req, res, next)
+
+    expect(req.locals).toEqual({ 
+      anyLocals: 'any_locals', 
+      file: { 
+        buffer: req.file?.buffer,
+        mimeType: req.file?.mimetype 
+      } 
+    })
   })
 })
