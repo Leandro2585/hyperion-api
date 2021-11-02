@@ -21,7 +21,7 @@ export class AwsS3FileStorageAdapter implements UploadFile, DeleteFile {
       Body: file,
       ACL: 'public-read'
     }).promise()
-    return `https://${this.bucket}.s3.amazonaws.com/${encodeURIComponent(key)}`
+    return `https://${this.bucket}.s3.amazonaws.com/${encodeURIComponent(fileName)}`
   }
 
   async delete ({ fileName }: DeleteFile.Input): Promise<void> {
