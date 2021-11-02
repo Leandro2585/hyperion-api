@@ -8,20 +8,20 @@ import { PostgresUser } from '@infra/typeorm/entities'
 import { makeFakeDatabase } from '@tests/infra/typeorm/mocks'
 
 describe('user-profile routes', () => {
+  let backup: IBackup
+  let postgresUserRepository: Repository<PostgresUser>
+
+  beforeAll(async () => {
+    const database = await makeFakeDatabase([PostgresUser])
+    backup = database.backup()
+    postgresUserRepository = getRepository(PostgresUser)
+  })
+
+  beforeEach(() => backup.restore())
+
+  afterAll(async () => await getConnection().close())
+
   describe('DELETE /users/avatar', async () => {
-    let backup: IBackup
-    let postgresUserRepository: Repository<PostgresUser>
-
-    beforeAll(async () => {
-      const database = await makeFakeDatabase([PostgresUser])
-      backup = database.backup()
-      postgresUserRepository = getRepository(PostgresUser)
-    })
-
-    beforeEach(() => backup.restore())
-
-    afterAll(async () => await getConnection().close())
-
     test('should return 403 if no authorization header is present', async () => {
       const { status } = await request(app)
         .delete('/api/users/avatar')
@@ -38,6 +38,15 @@ describe('user-profile routes', () => {
     
       expect(status).toBe(200)
       expect(body).toEqual({ avatarUrl: undefined, initials: 'LR' })
+    })
+  })
+
+  describe('PUT /users/avatar', async () => {
+    test('should return 403 if no authorization header is not present', async () => {
+      const { status } = await request(app)
+        .put('/api/users/avatar')
+      
+      expect(status).toBe(403)
     })
   })
 })
