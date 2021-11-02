@@ -1,12 +1,14 @@
 import 'reflect-metadata'
-import { createConnection } from 'typeorm'
+import { createConnection, getConnectionOptions } from 'typeorm'
 
-import '@main/config/module-alias'
+import './config/module-alias'
 import { app, env } from '@main/config'
 
-createConnection('default')
-  .then(() => {
+createConnection()
+  .then(async () => {
+    const { app } = await import('@main/config')
     app.listen(env.apiPort, () => {
       console.log(`Server started at http://localhost:${env.apiPort}/`)
     })
-  }).catch(console.error)
+  })
+  .catch(console.error)
