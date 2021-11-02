@@ -19,6 +19,7 @@ const adaptMulter: RequestHandler = (request, response, next) => {
         }
       }
     }
+    next()
   })
 }
 
@@ -93,5 +94,12 @@ describe('multer adapter', () => {
         mimeType: req.file?.mimetype 
       } 
     })
+  })
+
+  test('should call next on success', () => {
+    sut(req, res, next)
+
+    expect(next).toHaveBeenCalledWith()
+    expect(next).toHaveBeenCalledTimes(1)
   })
 })
