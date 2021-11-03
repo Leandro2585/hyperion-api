@@ -1,6 +1,13 @@
 import { mocked } from 'ts-jest/utils'
 import { Connection, createConnection, getConnectionManager, getConnection, QueryRunner,  } from 'typeorm'
 
+export class ConnectionNotFoundError extends Error {
+  constructor() {
+    super('No connection was found')
+    this.name = 'ConnectionNotFoundError'
+  }
+}
+
 export class PostgresConnection {
   private static instance?: PostgresConnection
   private query?: QueryRunner
@@ -22,6 +29,7 @@ export class PostgresConnection {
   }
 
   async disconnect(): Promise<void> {
+    if (this.query === undefined) throw new ConnectionNotFoundError()
     await getConnection().close()
     this.query = undefined
   }
@@ -49,7 +57,7 @@ describe('postgres connection', () => {
       has: jest.fn().mockReturnValue(true)
     })
     mocked(getConnectionManager).mockImplementation(getConnectionManagerSpy)
-    createQueryRunnerSpy = jest.fn()
+    createQueryRunnerSpy = jest.fn().mockReturnValue({})
     createConnectionSpy = jest.fn().mockResolvedValue({
       createQueryRunner: createQueryRunnerSpy
     })
@@ -62,9 +70,7 @@ describe('postgres connection', () => {
     mocked(getConnection).mockImplementation(getConnectionSpy)
   })
   
-  beforeEach(() => {
-    sut = PostgresConnection.getInstance()
-  })
+  beforeEach(() => sut = PostgresConnection.getInstance())
   
   test('should have only one instance', () => {
     const sut2 = PostgresConnection.getInstance()
@@ -97,5 +103,12 @@ describe('postgres connection', () => {
 
     expect(closeSpy).toHaveBeenCalledWith()
     expect(closeSpy).toHaveBeenCalledWith(1)
+  })
+
+  test('should return ConnectionNotFoundError on disconnect if connection is not found', async () => {
+    const promise = sut.disconnect()
+
+    expect(closeSpy).not.toHaveBeenCalled()
+    await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
   })
 })
