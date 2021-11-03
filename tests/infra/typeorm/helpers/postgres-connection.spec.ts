@@ -1,8 +1,10 @@
 import { mocked } from 'ts-jest/utils'
-import { Connection, createConnection, getConnectionManager, getConnection } from 'typeorm'
+import { Connection, createConnection, getConnectionManager, getConnection, QueryRunner,  } from 'typeorm'
 
 export class PostgresConnection {
   private static instance?: PostgresConnection
+  private query?: QueryRunner
+
   private constructor () {}
 
   static getInstance (): PostgresConnection {
@@ -16,7 +18,12 @@ export class PostgresConnection {
     const connection: Connection = getConnectionManager().has('default')
       ? getConnection()
       : await createConnection()
-    connection.createQueryRunner()
+    this.query = connection.createQueryRunner()
+  }
+
+  async disconnect(): Promise<void> {
+    await getConnection().close()
+    this.query = undefined
   }
 }
 
@@ -30,9 +37,10 @@ jest.mock('typeorm', () => ({
 }))
 
 describe('postgres connection', () => {
-  let getConnectionManagerSpy: jest.Mock
   let createQueryRunnerSpy: jest.Mock
   let createConnectionSpy: jest.Mock
+  let closeSpy: jest.Mock
+  let getConnectionManagerSpy: jest.Mock
   let getConnectionSpy: jest.Mock
   let sut: PostgresConnection
 
@@ -45,9 +53,11 @@ describe('postgres connection', () => {
     createConnectionSpy = jest.fn().mockResolvedValue({
       createQueryRunner: createQueryRunnerSpy
     })
+    closeSpy = jest.fn()
     mocked(createConnection).mockImplementation(createConnectionSpy)
     getConnectionSpy = jest.fn().mockReturnValue({
-      createQueryRunner: createQueryRunnerSpy
+      createQueryRunner: createQueryRunnerSpy,
+      close: closeSpy
     })
     mocked(getConnection).mockImplementation(getConnectionSpy)
   })
@@ -79,5 +89,13 @@ describe('postgres connection', () => {
     expect(getConnectionSpy).toHaveBeenCalledTimes(1)
     expect(createQueryRunnerSpy).toHaveBeenCalledWith()
     expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('should close connection', async () => {
+    await sut.connect()
+    await sut.disconnect()
+
+    expect(closeSpy).toHaveBeenCalledWith()
+    expect(closeSpy).toHaveBeenCalledWith(1)
   })
 })
