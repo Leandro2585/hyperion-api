@@ -1,39 +1,7 @@
 import { mocked } from 'ts-jest/utils'
-import { Connection, createConnection, getConnectionManager, getConnection, QueryRunner,  } from 'typeorm'
+import { createConnection, getConnectionManager, getConnection } from 'typeorm'
 
-export class ConnectionNotFoundError extends Error {
-  constructor() {
-    super('No connection was found')
-    this.name = 'ConnectionNotFoundError'
-  }
-}
-
-export class PostgresConnection {
-  private static instance?: PostgresConnection
-  private query?: QueryRunner
-
-  private constructor () {}
-
-  static getInstance (): PostgresConnection {
-    if(PostgresConnection.instance === undefined) {
-      PostgresConnection.instance = new PostgresConnection
-    }
-    return PostgresConnection.instance
-  }
-
-  async connect(): Promise<void> {
-    const connection: Connection = getConnectionManager().has('default')
-      ? getConnection()
-      : await createConnection()
-    this.query = connection.createQueryRunner()
-  }
-
-  async disconnect(): Promise<void> {
-    if (this.query === undefined) throw new ConnectionNotFoundError()
-    await getConnection().close()
-    this.query = undefined
-  }
-}
+import { PostgresConnection, ConnectionNotFoundError } from '@infra/typeorm/helpers'
 
 jest.mock('typeorm', () => ({
   Entity: jest.fn(),
