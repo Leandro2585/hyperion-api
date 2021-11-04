@@ -16,6 +16,7 @@ describe('postgres connection', () => {
   let createQueryRunnerSpy: jest.Mock
   let createConnectionSpy: jest.Mock
   let closeSpy: jest.Mock
+  let startTransactionSpy: jest.Mock
   let getConnectionManagerSpy: jest.Mock
   let getConnectionSpy: jest.Mock
   let sut: PostgresConnection
@@ -25,7 +26,10 @@ describe('postgres connection', () => {
       has: jest.fn().mockReturnValue(true)
     })
     mocked(getConnectionManager).mockImplementation(getConnectionManagerSpy)
-    createQueryRunnerSpy = jest.fn().mockReturnValue({})
+    startTransactionSpy = jest.fn()
+    createQueryRunnerSpy = jest.fn().mockReturnValue({
+      startTransaction: startTransactionSpy
+    })
     createConnectionSpy = jest.fn().mockResolvedValue({
       createQueryRunner: createQueryRunnerSpy
     })
@@ -39,7 +43,7 @@ describe('postgres connection', () => {
   })
   
   beforeEach(() => sut = PostgresConnection.getInstance())
-  
+
   test('should have only one instance', () => {
     const sut2 = PostgresConnection.getInstance()
     
@@ -77,6 +81,22 @@ describe('postgres connection', () => {
     const promise = sut.disconnect()
 
     expect(closeSpy).not.toHaveBeenCalled()
+    await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
+  })
+
+  test('should open transaction', async () => {
+    await sut.connect()
+    await sut.openTransaction()
+
+    expect(startTransactionSpy).toHaveBeenCalledWith()
+    expect(startTransactionSpy).toHaveBeenCalledTimes(1)
+    await sut.disconnect()
+  })
+
+  test('should return ConnectionNotFoundError on open transaction if connection is not found', async () => {
+    const promise = sut.openTransaction()
+
+    expect(startTransactionSpy).not.toHaveBeenCalled()
     await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
   })
 })
