@@ -1,6 +1,6 @@
 import { ConnectionNotFoundError } from '@infra/typeorm/helpers'
 
-import { getConnection, getConnectionManager, QueryRunner, Connection, createConnection } from 'typeorm'
+import { getConnection, getConnectionManager, QueryRunner, Connection, ObjectType, createConnection, Repository } from 'typeorm'
 
 export class PostgresConnection {
   private static instance?: PostgresConnection
@@ -46,5 +46,10 @@ export class PostgresConnection {
   async rollback(): Promise<void> {
     if (this.query === undefined) throw new ConnectionNotFoundError()
     await this.query.rollbackTransaction()
+  }
+
+  getRepository<Entity> (entity: ObjectType<Entity>): Repository<Entity> {
+    if (this.query === undefined) throw new ConnectionNotFoundError()
+    return this.query.manager.getRepository(entity)
   }
 }
