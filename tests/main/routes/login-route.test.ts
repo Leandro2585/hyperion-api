@@ -1,16 +1,18 @@
 import request from 'supertest'
 import { IBackup } from 'pg-mem'
-import { getConnection } from 'typeorm'
 
 import { app } from '@main/config'
-import { PostgresUser } from '@infra/typeorm/entities'
 import { UnauthorizedError } from '@app/errors'
+import { PostgresUser } from '@infra/typeorm/entities'
+import { PostgresConnection } from '@infra/typeorm/helpers'
 import { makeFakeDatabase } from '@tests/infra/typeorm/mocks'
 
 describe('login route', () => {
   describe('POST /login/facebook', () => {
     let backup: IBackup
+    let connection: PostgresConnection
     const loadUserSpy = jest.fn()
+
     jest.mock('@infra/gateways/facebook-gateway-adapter', () => ({
       facebookGateway: jest.fn().mockReturnValue({
         loadUser: loadUserSpy
@@ -18,6 +20,7 @@ describe('login route', () => {
     }))
 
     beforeAll(async () => {
+      connection = PostgresConnection.getInstance()
       const database = await makeFakeDatabase([PostgresUser])
       backup = database.backup()
     })
@@ -27,7 +30,7 @@ describe('login route', () => {
     })
 
     afterAll(async () => {
-      await getConnection().close()
+      await connection.disconnect()
     })
 
     test('should return 200 with AccessToken', async () => {
