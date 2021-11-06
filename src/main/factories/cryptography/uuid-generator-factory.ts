@@ -5,5 +5,5 @@ export const makeUUIDGenerator = (): UUIDAdapter => {
 }
 
 export const makeUniqueIdGenerator = (): UniqueId => {
-  return new UniqueId(new Date())
+  return new UniqueId()
 }
