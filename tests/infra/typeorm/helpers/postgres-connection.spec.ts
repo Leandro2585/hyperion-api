@@ -1,7 +1,7 @@
 import { mocked } from 'ts-jest/utils'
-import { createConnection, getConnectionManager, getConnection } from 'typeorm'
+import { createConnection, getConnectionManager, getConnection, getRepository } from 'typeorm'
 
-import { PostgresConnection, ConnectionNotFoundError } from '@infra/typeorm/helpers'
+import { PostgresConnection, ConnectionNotFoundError, TransactionNotFoundError } from '@infra/typeorm/helpers'
 import { PostgresUser } from '@infra/typeorm/entities'
 
 jest.mock('typeorm', () => ({
@@ -52,6 +52,7 @@ describe('postgres connection', () => {
 			close: closeSpy
 		})
 		mocked(getConnection).mockImplementation(getConnectionSpy)
+		mocked(getRepository).mockImplementation(getRepositorySpy)
 	})
 	
 	beforeEach(() => sut = PostgresConnection.getInstance())
@@ -68,8 +69,6 @@ describe('postgres connection', () => {
 
 		expect(createConnectionSpy).toHaveBeenCalledWith()
 		expect(createConnectionSpy).toHaveBeenCalledTimes(1)
-		expect(createQueryRunnerSpy).toHaveBeenCalledWith()
-		expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1)
 	})
 
 	test('should use an existing connection', async () => {
@@ -77,8 +76,6 @@ describe('postgres connection', () => {
 
 		expect(getConnectionSpy).toHaveBeenCalledWith()
 		expect(getConnectionSpy).toHaveBeenCalledTimes(1)
-		expect(createQueryRunnerSpy).toHaveBeenCalledWith()
-		expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1)
 	})
 
 	test('should close connection', async () => {
@@ -102,6 +99,8 @@ describe('postgres connection', () => {
 
 		expect(startTransactionSpy).toHaveBeenCalledWith()
 		expect(startTransactionSpy).toHaveBeenCalledTimes(1)
+		expect(createQueryRunnerSpy).toHaveBeenCalledWith()
+		expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1)
 		await sut.disconnect()
 	})
 
@@ -114,6 +113,7 @@ describe('postgres connection', () => {
 
 	test('should close transaction', async () => {
 		await sut.connect()
+		await sut.openTransaction()
 		await sut.closeTransaction()
 
 		expect(releaseSpy).toHaveBeenCalledWith()
@@ -121,15 +121,16 @@ describe('postgres connection', () => {
 		await sut.disconnect()
 	})
 
-	test('should return ConnectionNotFoundError on close transaction if connection is not found', async () => {
+	test('should return TransactionNotFoundError on close transaction if query runner is not found', async () => {
 		const promise = sut.closeTransaction()
 
 		expect(releaseSpy).not.toHaveBeenCalled()
-		await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
+		await expect(promise).rejects.toThrow(new TransactionNotFoundError())
 	})
 
 	test('should commit transaction', async () => {
 		await sut.connect()
+		await sut.openTransaction()
 		await sut.commit()
 
 		expect(commitTransactionSpy).toHaveBeenCalledWith()
@@ -137,15 +138,16 @@ describe('postgres connection', () => {
 		await sut.disconnect()
 	})
 
-	test('should return ConnectionNotFoundError on commit transaction if connection is not found', async () => {
+	test('should return TransactionNotFoundError on commit transaction if query runner is not found', async () => {
 		const promise = sut.commit()
 
 		expect(commitTransactionSpy).not.toHaveBeenCalled()
-		await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
+		await expect(promise).rejects.toThrow(new TransactionNotFoundError())
 	})
 
 	test('should rollback transaction', async () => {
 		await sut.connect()
+		await sut.openTransaction()
 		await sut.rollback()
 
 		expect(rollbackTransactionSpy).toHaveBeenCalledWith()
@@ -153,11 +155,22 @@ describe('postgres connection', () => {
 		await sut.disconnect()
 	})
 
-	test('should return ConnectionNotFoundError on rollback transaction if connection is not found', async () => {
+	test('should return TransactionNotFoundError on rollback transaction if query runner is not found', async () => {
 		const promise = sut.rollback()
 
 		expect(rollbackTransactionSpy).not.toHaveBeenCalled()
-		await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
+		await expect(promise).rejects.toThrow(new TransactionNotFoundError())
+	})
+
+	test('should get repository from transaction', async () => {
+		await sut.connect()
+		await sut.openTransaction()
+		const repository = sut.getRepository(PostgresUser)
+
+		expect(getRepositorySpy).toHaveBeenCalledWith(PostgresUser)
+		expect(getRepositorySpy).toHaveBeenCalledTimes(1)
+		expect(repository).toBe('any_repository')
+		await sut.disconnect()
 	})
 
 	test('should get repository', async () => {
