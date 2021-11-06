@@ -1,4 +1,4 @@
-import { noContent } from '@app/helpers/http-helpers'
+import { noContent } from '@app/helpers'
 import { Controller, HttpResponse } from '@app/protocols'
 import { ChangeProfileAvatarService } from '@core/usecases'
 

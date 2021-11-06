@@ -1,5 +1,5 @@
 import { ForbiddenError, ServerError, UnauthorizedError } from '@app/errors'
-import { ok, badRequest, unauthorized, serverError, forbidden, noContent } from '@app/helpers/http-helpers'
+import { ok, badRequest, unauthorized, serverError, forbidden, noContent } from '@app/helpers'
 
 describe('http helpers', () => {
   test('should return 200 with correct data on ok', () => {

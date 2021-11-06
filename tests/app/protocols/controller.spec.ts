@@ -23,6 +23,7 @@ describe('controller', () => {
   beforeEach(() => {
     sut = new ControllerStub()
   })
+
   test('should return 400 if validation fails', async () => {
     const error = new Error('validation_error')
     const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
@@ -46,6 +47,16 @@ describe('controller', () => {
     expect(httpResponse).toEqual({
       statusCode: 500,
       data: new ServerError(error)
+    })
+  })
+
+  test('should return 500 if execute throws a non error object', async () => {
+    jest.spyOn(sut, 'execute').mockRejectedValueOnce('execute_error')
+    const httpResponse = await sut.handle('any_value')
+
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: new ServerError(undefined)
     })
   })
 

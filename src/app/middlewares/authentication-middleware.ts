@@ -1,4 +1,4 @@
-import { forbidden, ok } from '@app/helpers/http-helpers'
+import { forbidden, ok } from '@app/helpers'
 import { HttpResponse } from '@app/protocols'
 import { Middleware } from '@app/protocols/middleware'
 import { RequiredStringValidator } from '@app/validators'

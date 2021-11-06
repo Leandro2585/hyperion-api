@@ -1,4 +1,4 @@
-import { badRequest, serverError } from '@app/helpers/http-helpers'
+import { badRequest, serverError } from '@app/helpers'
 import { HttpResponse, Validator } from '@app/protocols'
 import { ValidationComposite } from '@app/validators'
 

@@ -1,6 +1,6 @@
 import { Controller, HttpResponse, Validator } from '@app/protocols'
 import { ValidationBuilder } from '@app/validators'
-import { ok } from '@app/helpers/http-helpers'
+import { ok } from '@app/helpers'
 import { ChangeProfileAvatarService } from '@core/usecases'
 
 type HttpRequest = { userId: string, file?: { buffer: Buffer, mimeType: string } }
