@@ -22,16 +22,16 @@
     "test:s3": "yarn test:integration -- tests/external/aws-s3-file-storage-external.test.ts"
   },
   "dependencies": {
-    "aws-sdk": "^2.1020.0",
+    "aws-sdk": "^2.1036.0",
     "axios": "^0.24.0",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
-    "multer": "^1.4.3",
+    "multer": "^1.4.4",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "typeorm": "0.2.39",
+    "typeorm": "0.2.41",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
