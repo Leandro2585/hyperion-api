@@ -1,10 +1,10 @@
 import 'reflect-metadata'
-import { createConnection, getConnectionOptions } from 'typeorm'
 
 import './config/module-alias'
-import { app, env } from '@main/config'
+import { env } from '@main/config'
+import { PostgresConnection } from '@infra/typeorm/helpers'
 
-createConnection()
+PostgresConnection.getInstance().connect()
   .then(async () => {
     const { app } = await import('@main/config')
     app.listen(env.apiPort, () => {

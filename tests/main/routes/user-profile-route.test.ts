@@ -5,21 +5,24 @@ import { getConnection, getRepository, Repository } from 'typeorm'
 
 import { app, env } from '@main/config'
 import { PostgresUser } from '@infra/typeorm/entities'
+import { PostgresConnection } from '@infra/typeorm/helpers'
 import { makeFakeDatabase } from '@tests/infra/typeorm/mocks'
 
 describe('user-profile routes', () => {
   let backup: IBackup
+  let connection: PostgresConnection
   let postgresUserRepository: Repository<PostgresUser>
 
   beforeAll(async () => {
+    connection = PostgresConnection.getInstance()
     const database = await makeFakeDatabase([PostgresUser])
     backup = database.backup()
-    postgresUserRepository = getRepository(PostgresUser)
+    postgresUserRepository = connection.getRepository(PostgresUser)
   })
 
   beforeEach(() => backup.restore())
 
-  afterAll(async () => await getConnection().close())
+  afterAll(async () => await connection.disconnect())
 
   describe('DELETE /users/avatar', async () => {
     let deleteAvatarRoute: string

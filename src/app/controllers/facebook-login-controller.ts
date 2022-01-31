@@ -1,5 +1,5 @@
 import { Controller, HttpResponse, Validator } from '@app/protocols'
-import { ok, unauthorized } from '@app/helpers/http-helpers'
+import { ok, unauthorized } from '@app/helpers'
 import { ValidationBuilder } from '@app/validators'
 import { FacebookAuthenticationService } from '@core/usecases'
 
