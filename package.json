@@ -22,7 +22,7 @@
     "test:s3": "yarn test:integration -- tests/external/aws-s3-file-storage-external.test.ts"
   },
   "dependencies": {
-    "aws-sdk": "^2.1048.0",
+    "aws-sdk": "^2.1056.0",
     "axios": "^0.24.0",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
