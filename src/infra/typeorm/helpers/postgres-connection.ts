@@ -11,49 +11,49 @@ export class PostgresConnection implements DatabaseTransaction {
   private constructor () {}
 
   static getInstance (): PostgresConnection {
-    if(PostgresConnection.instance === undefined) {
-      PostgresConnection.instance = new PostgresConnection
+    if (PostgresConnection.instance === undefined) {
+      PostgresConnection.instance = new PostgresConnection()
     }
     return PostgresConnection.instance
   }
 
-  async connect(): Promise<void> {
+  async connect (): Promise<void> {
     this.connection = getConnectionManager().has('default')
       ? getConnection()
       : await createConnection()
   }
 
-  async disconnect(): Promise<void> {
+  async disconnect (): Promise<void> {
     if (this.connection === undefined) throw new ConnectionNotFoundError()
     await getConnection().close()
     this.query = undefined
     this.connection = undefined
   }
 
-  async openTransaction(): Promise<void> {
+  async openTransaction (): Promise<void> {
     if (this.connection === undefined) throw new ConnectionNotFoundError()
     this.query = this.connection.createQueryRunner()
     await this.query.startTransaction()
   }
 
-  async closeTransaction(): Promise<void> {
+  async closeTransaction (): Promise<void> {
     if (this.query === undefined) throw new TransactionNotFoundError()
     await this.query.release()
   }
 
-  async commit(): Promise<void> {
+  async commit (): Promise<void> {
     if (this.query === undefined) throw new TransactionNotFoundError()
     await this.query.commitTransaction()
   }
 
-  async rollback(): Promise<void> {
+  async rollback (): Promise<void> {
     if (this.query === undefined) throw new TransactionNotFoundError()
     await this.query.rollbackTransaction()
   }
 
   getRepository<Entity> (entity: ObjectType<Entity>): Repository<Entity> {
     if (this.connection === undefined) throw new ConnectionNotFoundError()
-    if(this.query !== undefined) return this.query.manager.getRepository(entity)
+    if (this.query !== undefined) return this.query.manager.getRepository(entity)
     return getRepository(entity)
   }
 }

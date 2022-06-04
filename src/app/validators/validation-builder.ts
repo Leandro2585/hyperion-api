@@ -17,19 +17,19 @@ export class ValidationBuilder {
     return new ValidationBuilder(params.value, params.fieldName)
   }
 
-  required(): ValidationBuilder {
-    if(this.value instanceof Buffer) this.buffer(this.value)
+  required (): ValidationBuilder {
+    if (this.value instanceof Buffer) this.buffer(this.value)
     else if (typeof this.value === 'string') this.string()
     else if (typeof this.value === 'object') {
       this.object()
-      if(this.value.buffer !== undefined) {
+      if (this.value.buffer !== undefined) {
         this.buffer(this.value.buffer)
       }
     }
     return this
   }
 
-  object(): ValidationBuilder {
+  object (): ValidationBuilder {
     this.validators.push(new RequiredValidator(this.value, this.fieldName))
     return this
   }
@@ -44,11 +44,11 @@ export class ValidationBuilder {
     return this
   }
 
-  image(args: { allowedExtensions: AllowedExtensions[], maxSizeInMb: number }): ValidationBuilder {
-    if(this.value.mimeType !== undefined) {
+  image (args: { allowedExtensions: AllowedExtensions[], maxSizeInMb: number }): ValidationBuilder {
+    if (this.value.mimeType !== undefined) {
       this.validators.push(new AllowedMimeTypesValidator(args.allowedExtensions, this.value.mimeType))
     }
-    if(this.value.buffer !== undefined) {
+    if (this.value.buffer !== undefined) {
       this.validators.push(new MaxFileSizeValidator(args.maxSizeInMb, this.value.buffer))
     }
     return this

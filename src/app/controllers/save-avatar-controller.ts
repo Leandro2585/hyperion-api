@@ -7,7 +7,7 @@ type HttpRequest = { userId: string, file?: { buffer: Buffer, mimeType: string }
 type Model = { initials?: string, avatarUrl?: string }
 
 export class SaveAvatarController extends Controller {
-  constructor(private readonly changeProfileAvatar: ChangeProfileAvatarService) {
+  constructor (private readonly changeProfileAvatar: ChangeProfileAvatarService) {
     super()
   }
 
@@ -16,8 +16,8 @@ export class SaveAvatarController extends Controller {
     return ok({ initials, avatarUrl })
   }
 
-  override buildValidators({ file }: HttpRequest): Validator[] {
-    if(file === undefined) return []
+  override buildValidators ({ file }: HttpRequest): Validator[] {
+    if (file === undefined) return []
     return [
       ...ValidationBuilder.of({ value: file, fieldName: 'file' })
         .required()
