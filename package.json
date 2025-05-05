@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1097.0",
-    "axios": "^1.6.4",
+    "axios": "^1.7.4",
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
